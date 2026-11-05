@@ -82,9 +82,10 @@ The jam closes on 15 November 2026, 23:59 AoE, with no edits after that.
 
 ## Status
 
-First playable loop: offers, pay now / split in 4 / skip, the next four paydays as columns, late fees, credit report
-panel, the bank's decision and the end summary. `npm test` runs the money model and the balance table
-(500 seasons per strategy); `tests/e2e.sh <device>` plays the published build on a real device.
+**Submitted to Zoud GameLab on 4 November 2026**: https://itch.io/jam/zoud-gamelab/rate/5301740 (build 0.2 on itch.io and on
+GitHub Pages). Editable until the jam closes on 15 November 2026, 23:59 AoE. `npm test` runs the money model, the balance
+table (500 seasons per strategy), the texts in both languages, the pictograms, and the numbers in the concept document and
+the budget; `tests/e2e.sh <device>` plays the published build on a real device.
 
 ## License
 
