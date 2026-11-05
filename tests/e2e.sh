@@ -7,6 +7,10 @@ D=${1:-livre}; U=${2:-https://designmaster-solutions.github.io/stacked-zoud/}
 fail() { print -u2 "E2E FAIL: $*"; exit 1; }
 browse $D open "${U}?seed=7&lang=en&a11y=calm&v=$RANDOM" >/dev/null
 browse $D wait --text "STACKED" 20 >/dev/null || fail "title"
+B=$(browse $D js 'return Math.round(document.querySelector("[data-act=start]").getBoundingClientRect().bottom - innerHeight)')
+[[ $B -le 0 ]] || fail "Start the season is ${B}px below the fold"
+W=$(browse $D js 'return document.querySelector(".title .actions").scrollWidth - document.querySelector(".title .actions").clientWidth')
+[[ $W -le 0 ]] || fail "title action row overflows by ${W}px"
 browse $D click --text "Start the season" >/dev/null
 browse $D wait --text "Month 1 of 8" 10 >/dev/null || fail "month 1"
 [[ $(browse $D js 'return document.querySelectorAll(".col").length') == 4 ]] || fail "four payday columns"

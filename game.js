@@ -1,8 +1,8 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=12';
-import * as A from './a11y.js?v=12';
-import * as I from './i18n.js?v=12';
-import * as Art from './art.js?v=12';
+import * as E from './econ.js?v=13';
+import * as A from './a11y.js?v=13';
+import * as I from './i18n.js?v=13';
+import * as Art from './art.js?v=13';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -121,20 +121,27 @@ function paydayCard() {
 
 // ---------- screens ----------
 const chips = () => A.KEYS.map(k => `<button class="chip" data-a11y="${k}" aria-pressed="${S[k]}">${T('a11y_' + k)}</button>`).join('');
+let settingsOpen = false;
 function title() {
   phase = 'title';
-  app.innerHTML = `<div class="hero" aria-hidden="true">${heroArt()}</div><h1>${T('title')}</h1><p class="tagline">${T('tagline')}</p>
+  app.innerHTML = `<div class="title"><div class="tcopy"><h1>${T('title')}</h1><p class="tagline">${T('tagline')}</p>
+    <div class="actions"><button class="primary" data-act="start">${T('start')}</button>
+    <button class="chip" data-lang="en" aria-pressed="${lang === 'en'}">English</button><button class="chip" data-lang="ar" aria-pressed="${lang === 'ar'}">العربية</button></div>
     <div class="panel"><p>${T('how1')}</p><p>${T('how2')}</p><p>${T('how3')}</p><p>${T('how4')}</p></div>
-    <div class="row"><button class="chip" data-lang="en" aria-pressed="${lang === 'en'}">English</button><button class="chip" data-lang="ar" aria-pressed="${lang === 'ar'}">العربية</button></div>
-    <p class="muted">${T('settings')}</p><div class="row">${chips()}</div>
-    <div class="actions"><button class="primary" data-act="start">${T('start')}</button></div><p class="muted small">${T('illustrative')}</p>`;
+    <details class="settings"${settingsOpen ? ' open' : ''}><summary>${T('settings')}</summary><div class="row">${chips()}</div></details>
+    <p class="muted small">${T('illustrative')}</p></div><div class="hero" aria-hidden="true">${heroArt()}</div></div>`;
 }
-// Four falling blocks over three paydays: the idea in one picture.
+// The idea in one picture, on a loop: a split drops one quarter on each of the next three paydays and the third column passes the money line.
 function heroArt() {
-  const b = (x, y, h, c, d) => `<rect class="hb" style="--d:${d}ms" x="${x}" y="${y}" width="56" height="${h}" rx="6" fill="hsl(${c} 70% 58%)"/>`;
-  return `<svg viewBox="0 0 320 150" role="img"><line x1="10" y1="62" x2="310" y2="62" stroke="#f2b134" stroke-dasharray="6 5" stroke-width="2"/>
-    ${b(40, 110, 30, 12, 0)}${b(110, 80, 60, 330, 120)}${b(110, 110, 30, 12, 200)}${b(180, 40, 100, 200, 300)}${b(250, 110, 30, 12, 400)}
-    <line x1="10" y1="141" x2="310" y2="141" stroke="#9fb3bf" stroke-width="2"/></svg>`;
+  const X = [20, 100, 180, 260], base = 170, line = 70;
+  const old = [40, 60, 88, 20], hues = [200, 45, 160, 280];
+  let out = `<line x1="8" y1="${line}" x2="332" y2="${line}" stroke="#f2b134" stroke-dasharray="7 5" stroke-width="2.5"/>`;
+  X.forEach((x, k) => {
+    out += `<rect x="${x}" y="${base - old[k]}" width="64" height="${old[k] - 2}" rx="6" fill="hsl(${hues[k]} 70% 58%)"/>`;
+    out += `<text x="${x + 32}" y="${base + 20}" text-anchor="middle" fill="#9eb0c4" font-size="13" font-weight="700">P${k + 2}</text>`;
+    if (k < 3) out += `<rect class="hq${k === 2 ? ' over' : ''}" style="--d:${k * 0.35}s" x="${x}" y="${base - old[k] - 32}" width="64" height="30" rx="6"/>`;
+  });
+  return `<svg viewBox="0 0 340 196" role="img">${out}<line x1="8" y1="${base}" x2="332" y2="${base}" stroke="#9eb0c4" stroke-width="2"/></svg>`;
 }
 
 function play() {
@@ -217,7 +224,7 @@ function autoStep() {
 app.addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b || b.disabled) return;
-  if (b.dataset.a11y) { S = A.toggle(S, b.dataset.a11y); save(A.STORAGE_KEY, JSON.stringify(S)); applySettings(); return title(); }
+  if (b.dataset.a11y) { settingsOpen = true; S = A.toggle(S, b.dataset.a11y); save(A.STORAGE_KEY, JSON.stringify(S)); applySettings(); return title(); }
   if (b.dataset.lang) { lang = b.dataset.lang; save(I.STORAGE_KEY, lang); applySettings(); return title(); }
   const a = b.dataset.act;
   if (a === 'start') start(Number(params.get('seed')) || Math.floor(Math.random() * 1e9));

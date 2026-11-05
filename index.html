@@ -22,9 +22,17 @@
   h1{font-size:3.4rem;line-height:1;margin:.2em 0 .1em;color:var(--gold);letter-spacing:.04em}
   h2{font-size:1.15rem;margin:.1em 0 .5em}
   .tagline{font-size:1.15rem}
-  .hero svg{display:block;width:100%;max-width:520px;height:auto}
-  .hb{animation:fall .7s cubic-bezier(.3,1.4,.6,1) both;animation-delay:var(--d)}
+  .title{display:grid;gap:4px 48px}
+  .title .hero{order:-1}
+  .hero svg{display:block;width:100%;height:auto;max-height:130px;margin:0 auto}
+  .hq{fill:var(--gold);transform-box:fill-box;animation:hq 4.4s cubic-bezier(.3,1.4,.6,1) infinite both;animation-delay:var(--d)}
+  .hq.over{fill:var(--red);animation-name:hqo}
+  @keyframes hq{0%{transform:translateY(-140px);opacity:0}14%{transform:none;opacity:1}82%{opacity:1}100%{opacity:0}}
+  @keyframes hqo{0%{transform:translateY(-140px);opacity:0;fill:var(--gold)}14%{transform:none;opacity:1;fill:var(--gold)}22%,82%{fill:var(--red);opacity:1}100%{opacity:0}}
   @keyframes fall{from{transform:translateY(-160px);opacity:0}}
+  .settings summary{cursor:pointer;color:var(--muted);padding:.3em 0}
+  .settings[open] summary{margin-bottom:6px}
+  @media (min-width:900px){.title{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;min-height:86vh}.title .hero{order:0}.hero svg{max-height:none}}
   p{margin:.4em 0}
   .muted{color:var(--muted)} .small{font-size:.85rem}
   .panel{background:var(--card);border-radius:14px;padding:12px 16px;margin:10px 0}
@@ -112,6 +120,6 @@
 <body>
 <main id="app" aria-live="polite"></main>
 <noscript>Stacked needs JavaScript.</noscript>
-<script type="module" src="game.js?v=12"></script>
+<script type="module" src="game.js?v=13"></script>
 </body>
 </html>

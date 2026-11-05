@@ -10,7 +10,7 @@ seg() { # seg <name> <seconds-cap> <url> <wait-text> [hold-seconds] [js-after]
   sleep ${5:-3}; touch $V/$1.mp4.stop
   until grep -q frames $V/$1.log; do sleep 1; done; print "$1: $(cat $V/$1.log)"
 }
-until curl -s "${U}?x=$RANDOM" | grep -q "game.js?v=12"; do sleep 5; done
+until curl -s "${U}?x=$RANDOM" | grep -q "game.js?v=13"; do sleep 5; done
 seg s1-title 20 "${U}?seed=7&lang=en" "STACKED" 7
 seg s2-greedy 120 "${U}?seed=7&lang=en&autoplay=alwaysSplit&pace=1100" "the bank reads your credit report" 7
 seg s3-planner 120 "${U}?seed=7&lang=en&autoplay=planner&pace=950" "the bank reads your credit report" 6
