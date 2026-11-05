@@ -1,8 +1,8 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=14';
-import * as A from './a11y.js?v=14';
-import * as I from './i18n.js?v=14';
-import * as Art from './art.js?v=14';
+import * as E from './econ.js?v=15';
+import * as A from './a11y.js?v=15';
+import * as I from './i18n.js?v=15';
+import * as Art from './art.js?v=15';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -31,6 +31,7 @@ const MUSIC_VOL = 0.16, MUSIC_LOOP_S = 21.3333;
 let music = null;
 async function startMusic() {
   if (music || S.mute) return;
+  document.body.dataset.music = 'loading';
   try {
     ac = ac || new AudioContext();
     music = { g: ac.createGain() };
@@ -39,7 +40,7 @@ async function startMusic() {
     src.buffer = buf; src.loop = true; src.loopEnd = Math.min(MUSIC_LOOP_S, buf.duration);
     src.connect(music.g).connect(ac.destination); src.start();
     syncMusic();
-  } catch { music = null; /* no audio: the game still plays */ }
+  } catch (e) { music = null; document.body.dataset.music = 'error: ' + e; /* no audio: the game still plays */ }
 }
 function syncMusic() {
   if (!music) return;
