@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stacked: every pay-in-4 lands on a payday you have not lived yet</title>
+<meta name="description" content="A one-thumb game about buy now, pay later in the UAE: watch the instalments stack on your next paydays before you live them.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23101a2b'/%3E%3Crect x='5' y='20' width='6' height='7' rx='1' fill='%23ff6b4a'/%3E%3Crect x='13' y='13' width='6' height='14' rx='1' fill='%23f2b134'/%3E%3Crect x='21' y='6' width='6' height='21' rx='1' fill='%2348c9b0'/%3E%3C/svg%3E">
+<style>
+  /* Baloo Bhaijaan 2 (SIL OFL 1.1, Ek Type), self-hosted: one face for Latin and Arabic. */
+  @font-face{font-family:Baloo;font-weight:400 800;font-display:swap;src:url(fonts/baloo-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20A8-20B9}
+  @font-face{font-family:Baloo;font-weight:400 800;font-display:swap;src:url(fonts/baloo-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC}
+  :root{--ink:#101a2b;--night:#0c1422;--card:#16233a;--sand:#f3ecdf;--gold:#f2b134;--teal:#48c9b0;--red:#ff5a3c;--muted:#9eb0c4;--fs:16px}
+  *{box-sizing:border-box}
+  html{font-size:var(--fs)}
+  body{margin:0;min-height:100vh;background:var(--night);color:var(--sand);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic","Geeza Pro",sans-serif;line-height:1.45}
+  body.large{--fs:21px}
+  /* avoid-ai-design-ignore-file: SD2. Pure black is the high-contrast accessibility mode, chosen on purpose */
+  body.contrast{--night:#000;--card:#000;--sand:#fff;--muted:#fff;--teal:#5ff2e0;--gold:#ffd23f}
+  #app{max-width:1180px;margin:0 auto;padding:12px 14px 40px;overflow-x:hidden}
+  h1,h2,.name,.price,.primary,.hud b,.stamp,.verdict{font-family:Baloo,system-ui,sans-serif}
+  h1{font-size:3.4rem;line-height:1;margin:.2em 0 .1em;color:var(--gold);letter-spacing:.04em}
+  h2{font-size:1.15rem;margin:.1em 0 .5em}
+  .tagline{font-size:1.15rem}
+  .hero svg{display:block;width:100%;max-width:520px;height:auto}
+  .hb{animation:fall .7s cubic-bezier(.3,1.4,.6,1) both;animation-delay:var(--d)}
+  @keyframes fall{from{transform:translateY(-160px);opacity:0}}
+  p{margin:.4em 0}
+  .muted{color:var(--muted)} .small{font-size:.85rem}
+  .panel{background:var(--card);border-radius:14px;padding:12px 16px;margin:10px 0}
+  body.contrast .panel,body.contrast .offer,body.contrast .board,body.contrast .report{border:2px solid #fff}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .actions{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;margin-top:12px}
+  button{font:inherit;cursor:pointer;border-radius:10px;border:0;white-space:nowrap}
+  button[disabled]{opacity:.38;cursor:not-allowed}
+  .primary{background:var(--gold);color:var(--ink);font-weight:700;padding:.65em 1.1em}
+  .primary.alt{background:var(--teal)}
+  .link{background:none;color:var(--sand);text-decoration:underline;padding:.4em .2em}
+  .chip{background:transparent;color:var(--sand);border:1.5px solid var(--muted);padding:.35em .8em;border-radius:99px;font-size:.92rem}
+  .chip[aria-pressed=true]{background:var(--teal);border-color:var(--teal);color:var(--ink);font-weight:600}
+  button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .hud{display:flex;gap:4px 16px;flex-wrap:wrap;align-items:center;font-size:.92rem;position:sticky;top:0;background:var(--night);padding:6px 0;z-index:2}
+  .hud b{color:var(--gold);font-size:1.05rem}
+  .hud .link{margin-inline-start:auto}
+  .minus{color:#ff9a7a!important} .plus{color:var(--teal)}
+  .layout{display:grid;grid-template-columns:1fr;gap:12px}
+  @media (min-width:900px){.layout{grid-template-columns:1fr 300px}}
+  .board{background:var(--card);border-radius:14px;padding:10px 12px 8px}
+  .board small{font-weight:400;font-size:.8rem}
+  .cols{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .cols{align-items:end}
+  .col .stack{position:relative;min-height:190px;display:flex;flex-direction:column-reverse;gap:2px;border-bottom:3px solid var(--muted);padding:0 4px}
+  .col.over .stack{background:linear-gradient(to top,transparent 120px,#ff5a3c33 120px)}
+  .line{position:absolute;inset-inline:0;border-top:2px dashed var(--gold);pointer-events:none}
+  .blk{display:block;height:var(--h);min-height:10px;border-radius:5px;background:hsl(var(--hue) 70% 58%);color:var(--ink);font-style:normal;font-size:.68rem;font-weight:700;overflow:hidden;text-align:center;flex:none}
+  .blk span{display:block;padding-top:1px;white-space:nowrap}
+  .blk.late{background:repeating-linear-gradient(45deg,var(--red) 0 6px,#c2311a 6px 12px);color:#fff}
+  .blk.ghost{background:transparent;border:2px dashed hsl(var(--hue) 70% 62%);color:var(--sand)}
+  .blk.drop{animation:fall .55s cubic-bezier(.3,1.5,.6,1) both;animation-delay:var(--d)}
+  .foot{display:flex;justify-content:space-between;font-size:.8rem;padding:2px 2px 0}
+  .col.over .foot span{color:var(--red);font-weight:700}
+  .shake{animation:shake .45s}
+  @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+  .offer,.payday{background:var(--card);border-radius:14px;padding:12px 16px;margin-top:12px;border-top:6px solid hsl(var(--hue) 70% 58%)}
+  .offer .tag{font-size:.78rem;letter-spacing:.06em;color:var(--muted)}
+  .offer.need .tag{color:var(--gold);font-weight:700}
+  .offer .name{font-size:1.6rem;line-height:1.1}
+  .offer .price{font-size:2.1rem;color:var(--gold);line-height:1.1}
+  .why{color:var(--muted);min-height:1.2em}
+  .clock{height:10px;background:#0a111d;border-radius:99px;overflow:hidden;margin:8px 0 0}
+  .clock i{display:block;height:100%;background:var(--teal);transition:width .1s linear}
+  .clock.low i{background:var(--red)}
+  .ledger div{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid #ffffff14}
+  .ledger .bad{color:#ff9a7a;font-weight:700} .ledger .ok span:last-child{color:var(--teal)}
+  .verdict{font-size:1.3rem;margin-top:8px}
+  .payday.crash .verdict{color:var(--red)}
+  .report{background:var(--card);border-radius:14px;padding:10px 14px;align-self:start}
+  .report.red{box-shadow:0 0 0 3px var(--red)}
+  .report ul{list-style:none;margin:0;padding:0}
+  .report li{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:.9rem}
+  .report li i{width:12px;height:12px;border-radius:3px;background:hsl(var(--hue) 70% 58%);flex:none}
+  .report li span{margin-inline-start:auto;color:var(--teal);white-space:nowrap}
+  .report li.late span{color:var(--red);font-weight:700} .report li.closed span{color:var(--muted)}
+  .end{max-width:640px;margin:0 auto}
+  .stamp{display:inline-block;font-size:1.9rem;border:4px solid currentColor;padding:2px 12px;border-radius:8px;transform:rotate(-4deg);margin:10px 0;animation:stamp .35s ease-out}
+  .end.approved .stamp{color:var(--teal)} .end.conditions .stamp{color:var(--gold)} .end.declined .stamp{color:var(--red)}
+  @keyframes stamp{from{transform:scale(2.2) rotate(-4deg);opacity:0}}
+  .stats div{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid #ffffff18}
+  .stats b{color:var(--gold);white-space:nowrap}
+  .overlay{position:fixed;inset:0;background:#000c;display:flex;align-items:center;justify-content:center;z-index:9}
+  body.calm *{animation:none!important;transition:none!important}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  @media (max-width:420px){.primary{padding:.6em .7em;font-size:.92rem}.actions{gap:6px}h1{font-size:2.6rem}.col .stack{height:160px}.cols{gap:5px}.offer .price{font-size:1.8rem}}
+</style>
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<noscript>Stacked needs JavaScript.</noscript>
+<script type="module" src="game.js?v=3"></script>
+</body>
+</html>

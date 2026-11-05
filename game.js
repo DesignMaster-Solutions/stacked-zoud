@@ -1,7 +1,7 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=3';
-import * as A from './a11y.js?v=3';
-import * as I from './i18n.js?v=3';
+import * as E from './econ.js?v=4';
+import * as A from './a11y.js?v=4';
+import * as I from './i18n.js?v=4';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -76,7 +76,9 @@ function hud() {
 }
 
 function report() {
-  const rows = run.plans.map(p => {
+  const rank = p => (p.red && p.due.some(d => !d.paid) ? 0 : p.due.some(d => !d.paid) ? 1 : 2);
+  const plans = [...run.plans].sort((a, b) => rank(a) - rank(b)).filter((p, i, a) => rank(p) < 2 || i < a.findIndex(q => rank(q) === 2) + 3);
+  const rows = plans.map(p => {
     const left = p.due.filter(d => !d.paid).reduce((a, d) => a + d.aed, 0);
     const st = left === 0 ? 'closed' : p.red ? 'late' : 'onTime';
     return `<li class="${st}" style="--hue:${hue(p.id)}"><i></i>${item(p.id)} <span>${T(st)}${left ? ' · ' + money(left) : ''}</span></li>`;

@@ -48,7 +48,8 @@
   .board{background:var(--card);border-radius:14px;padding:10px 12px 8px}
   .board small{font-weight:400;font-size:.8rem}
   .cols{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .col .stack{position:relative;height:190px;display:flex;flex-direction:column-reverse;gap:2px;border-bottom:3px solid var(--muted);overflow:hidden;padding:0 4px}
+  .cols{align-items:end}
+  .col .stack{position:relative;min-height:190px;display:flex;flex-direction:column-reverse;gap:2px;border-bottom:3px solid var(--muted);padding:0 4px}
   .col.over .stack{background:linear-gradient(to top,transparent 120px,#ff5a3c33 120px)}
   .line{position:absolute;inset-inline:0;border-top:2px dashed var(--gold);pointer-events:none}
   .blk{display:block;height:var(--h);min-height:10px;border-radius:5px;background:hsl(var(--hue) 70% 58%);color:var(--ink);font-style:normal;font-size:.68rem;font-weight:700;overflow:hidden;text-align:center;flex:none}
@@ -89,12 +90,12 @@
   .overlay{position:fixed;inset:0;background:#000c;display:flex;align-items:center;justify-content:center;z-index:9}
   body.calm *{animation:none!important;transition:none!important}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-  @media (max-width:420px){.primary{padding:.6em .7em;font-size:.92rem}.actions{gap:6px}h1{font-size:2.6rem}.col .stack{height:160px}.cols{gap:5px}.offer .price{font-size:1.8rem}}
+  @media (max-width:420px){.primary{padding:.6em .7em;font-size:.92rem}.actions{gap:6px}h1{font-size:2.6rem}.col .stack{min-height:160px}.cols{gap:5px}.offer .price{font-size:1.8rem}}
 </style>
 </head>
 <body>
 <main id="app" aria-live="polite"></main>
 <noscript>Stacked needs JavaScript.</noscript>
-<script type="module" src="game.js?v=3"></script>
+<script type="module" src="game.js?v=4"></script>
 </body>
 </html>
