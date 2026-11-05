@@ -59,9 +59,17 @@ BNPL providers, shops and banks in the game are **fictional**: no real brand is 
 
 The jam closes on 15 November 2026, 23:59 AoE, with no edits after that.
 
+## Play
+
+**https://designmaster-solutions.github.io/stacked-zoud/** (browser, phone or desktop). Links for judges:
+`?lang=ar` (Arabic, right to left), `?a11y=calm,large,contrast,plain,mute` (accessibility modes, no timer in calm),
+`?autoplay=planner` or `?autoplay=alwaysSplit` (the game plays itself with that strategy), `?seed=7` (a fixed season).
+
 ## Status
 
-Scope only. Build log in the repo history.
+First playable loop: offers, pay now / split in 4 / skip, the next four paydays as columns, late fees, credit report
+panel, the bank's decision and the end summary. `npm test` runs the money model and the balance table
+(500 seasons per strategy); `tests/e2e.sh <device>` plays the published build on a real device.
 
 ## License
 

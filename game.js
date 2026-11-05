@@ -1,7 +1,7 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=2';
-import * as A from './a11y.js?v=2';
-import * as I from './i18n.js?v=2';
+import * as E from './econ.js?v=3';
+import * as A from './a11y.js?v=3';
+import * as I from './i18n.js?v=3';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -192,7 +192,7 @@ function autoStep() {
   if (paused) return setTimeout(autoStep, 300);
   if (phase === 'offer') {
     const a = E.STRATEGIES[auto](run, offer());
-    app.querySelector(`[data-act=${a}]:not([disabled])`)?.click() || app.querySelector('[data-act=skip]').click();
+    (app.querySelector(`[data-act=${a}]:not([disabled])`) || app.querySelector('[data-act=skip]')).click();
   } else if (phase === 'payday') app.querySelector('[data-act=cont]').click();
 }
 
