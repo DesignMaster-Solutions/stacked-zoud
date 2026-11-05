@@ -26,6 +26,27 @@ const clocked = () => !S.calm && !auto && E.hasClock(run, offer());
 
 // ---------- sound: tiny WebAudio blips, nothing downloaded ----------
 let ac;
+// Background music: the Apple Loops mix of the gameplay video (licence in README), looped sample-exact by WebAudio.
+const MUSIC_VOL = 0.16, MUSIC_LOOP_S = 21.3333;
+let music = null;
+async function startMusic() {
+  if (music || S.mute) return;
+  try {
+    ac = ac || new AudioContext();
+    music = { g: ac.createGain() };
+    const buf = await ac.decodeAudioData(await (await fetch('music.wav?v=1')).arrayBuffer());
+    const src = ac.createBufferSource();
+    src.buffer = buf; src.loop = true; src.loopEnd = Math.min(MUSIC_LOOP_S, buf.duration);
+    src.connect(music.g).connect(ac.destination); src.start();
+    syncMusic();
+  } catch { music = null; /* no audio: the game still plays */ }
+}
+function syncMusic() {
+  if (!music) return;
+  const on = !S.mute && !paused;
+  music.g.gain.value = on ? MUSIC_VOL : 0;
+  document.body.dataset.music = on ? 'on' : 'off';
+}
 function blip(freqs, type = 'sine', dur = 0.12) {
   if (S.mute) return;
   try {
@@ -39,17 +60,19 @@ function blip(freqs, type = 'sine', dur = 0.12) {
   } catch { /* no audio: the game still plays */ }
 }
 const SND = { drop: () => blip([520, 390, 260], 'triangle', 0.08), coin: () => blip([880, 1320], 'triangle'), tick: () => blip([440], 'square', 0.04),
-  crash: () => blip([220, 150, 90], 'sawtooth', 0.22), good: () => blip([523, 659, 784], 'sine', 0.15), tap: () => blip([660], 'sine', 0.05) };
+  crash: () => blip([220, 150, 90], 'sawtooth', 0.22), good: () => blip([523, 659, 784], 'sine', 0.15), tap: () => blip([660], 'sine', 0.05),
+  paidoff: () => blip([784, 988, 1175, 1568], 'triangle', 0.13) }; // a plan paid off: a rising four-note chime, one note per instalment
 
 function applySettings() {
   document.body.className = A.KEYS.filter(k => S[k]).join(' ');
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  syncMusic();
 }
 
 // One hue per item, so a plan reads as the same colour in every column and on the report.
-const HUES = { sneakers: 12, concert: 330, headphones: 280, watch: 200, console: 250, phone: 190, sofa: 30, trip: 160, perfume: 300,
-  jacket: 45, dinner: 0, tv: 220, car: 100, fridge: 175, school: 60 };
+const HUES = { eidoutfit: 12, concert: 330, headphones: 280, watch: 200, console: 250, phone: 190, majlis: 30, hatta: 160, oud: 300,
+  eidgifts: 45, iftar: 0, tv: 220, car: 100, ac: 175, school: 60 };
 const hue = id => HUES[id] ?? 0;
 
 // ---------- the future board: one column per coming payday, the money line on top ----------
@@ -62,11 +85,11 @@ function board() {
     const blocks = [];
     for (const p of run.plans) for (const d of p.due) if (d.m === m && !d.paid) blocks.push({ id: p.id, aed: d.aed, red: p.red, fresh: dropped === p });
     const total = blocks.reduce((a, b) => a + b.aed, 0);
-    const over = total > E.FREE;
+    const lv = E.level(total);
     const html = blocks.map((b, i) => `<i class="blk${b.red ? ' late' : ''}${b.fresh && moving() ? ' drop' : ''}" style="--h:${Math.max(10, b.aed * SCALE)}px;--hue:${hue(b.id)};--d:${k * 90 + i * 20}ms" title="${item(b.id)} ${money(b.aed)}">${b.aed * SCALE >= 24 ? Art.icon(b.id) : ""}${b.aed * SCALE >= 14 ? `<span>${money(b.aed)}</span>` : ''}</i>`).join('')
       + (ghost && k <= 3 ? `<i class="blk ghost" style="--h:${ghost * SCALE}px;--hue:${hue(o.id)}"><span>${signed('+', ghost)}</span></i>` : '');
     const pct = Math.round(100 * total / E.FREE);
-    return `<div class="col${over ? ' over' : ''}" data-m="${m}"><div class="stack">${html}<b class="line" style="bottom:${E.FREE * SCALE}px"></b></div>
+    return `<div class="col ${lv}" data-m="${m}"><div class="stack">${html}<b class="line" style="bottom:${E.FREE * SCALE}px"></b></div>
       <div class="foot"><b>${m <= E.MONTHS ? T('pay', { n: m }) : T('pay', { n: m }) + '*'}</b><span>${pct}%</span></div></div>`;
   }).join('');
   return `<section class="board" aria-label="${T('future')}"><h2>${T('future')} <small class="muted">${T('yourMoney', { x: money(E.FREE) })}</small></h2>
@@ -115,7 +138,7 @@ function offerCard() {
 function paydayCard() {
   const lines = [`<div><span>${T('income')}</span><span class="plus">${signed('+', E.FREE)}</span></div>`]
     .concat(pd.makeDo ? [`<div><span>${T('makeDo')}</span><span class="minus">${signed('-', pd.makeDo)}</span></div>`] : [])
-    .concat(pd.paid.map(p => `<div class="ok"><span>${T('paidInst', { item: item(p.id) })}</span><span>${signed('-', p.aed)}</span></div>`))
+    .concat(pd.paid.map(p => `<div class="ok${p.done ? ' done' : ''}"><span>${T('paidInst', { item: item(p.id) })}${p.done ? ` <b class="paidoff">${T('paidOffStamp')}</b>` : ''}</span><span>${signed('-', p.aed)}</span></div>`))
     .concat(pd.missed.map(p => `<div class="bad"><span>${T('missedInst', { item: item(p.id), fee: money(p.fee) })}</span><span>${money(p.aed)}</span></div>`));
   return `<section class="payday${pd.missed.length ? ' crash' : ''}"><h2>${T('paydayTitle', { n: run.m })}</h2>
     <div class="ledger">${lines.join('')}</div><p class="verdict">${pd.missed.length ? T('collapse') : T('clean')}</p>
@@ -162,9 +185,9 @@ function play() {
 // Payday reads out line by line: a coin per instalment paid, a crash and a shake for each one missed.
 function paydayJuice() {
   const rows = [...app.querySelectorAll('.ledger div')];
-  if (!moving()) { if (pd.missed.length) SND.crash(); return; }
+  if (!moving()) { if (pd.missed.length) SND.crash(); else if (pd.paid.some(p => p.done)) SND.paidoff(); return; }
   rows.forEach((r, i) => { r.classList.add('in'); r.style.animationDelay = `${i * 160}ms`;
-    setTimeout(() => (r.classList.contains('bad') ? SND.crash() : SND.coin()), i * 160); });
+    setTimeout(() => (r.classList.contains('bad') ? SND.crash() : r.classList.contains('done') ? SND.paidoff() : SND.coin()), i * 160); });
   if (pd.missed.length) setTimeout(() => app.querySelector('.board')?.classList.add('shake'), rows.length * 160);
 }
 
@@ -204,7 +227,7 @@ function endScreen() {
   app.innerHTML = `<section class="end ${s.decision}"><p>${T('bankReads', { bank: T(run.bank === 'car' ? 'bankCar' : 'bankLease') })}</p>
     <div class="stamp" data-decision="${s.decision}">${T('dec_' + s.decision)}</div><p>${T('why_' + s.decision)}</p>
     <div class="stats">${rows.map(([k, v]) => `<div><span>${T(k)}</span><b>${v}</b></div>`).join('')}</div>
-    ${report()}<section class="panel facts"><h2>${T("trueTitle")}</h2><p>${T("true1")}</p><p>${T("true2")}</p><p>${T("true3")}</p>
+    ${report()}<section class="panel facts"><h2>${T("trueTitle")}</h2><p>${T("true1")}</p><p>${T("true2")}</p><p>${T("true3")}</p><p>${T("true4")}</p>
     <h2>${T("askTitle")}</h2><ol>${[1, 2, 3, 4, 5, 6].map(i => `<li>${T("ask" + i)}</li>`).join("")}</ol><p class="muted small">${T("askSource")}</p></section>
     <div class="actions"><button class="primary" data-act="again">${T('again')}</button></div><p class="muted small">${T('illustrative')}</p></section>`;
   if (s.decision === 'approved') SND.good(); else SND.crash();
@@ -232,6 +255,7 @@ app.addEventListener('click', e => {
   if (b.dataset.lang) { lang = b.dataset.lang; save(I.STORAGE_KEY, lang); applySettings(); return title(); }
   const a = b.dataset.act;
   if (['now', 'split', 'skip', 'cont'].includes(a) && performance.now() < armedAt) return;
+  if (a === 'start') startMusic();
   if (a === 'start') start(Number(params.get('seed')) || Math.floor(Math.random() * 1e9));
   if (['now', 'split', 'skip'].includes(a)) act(a);
   if (a === 'cont') { timedOut = null; phase = 'offer'; play(); }
@@ -240,7 +264,7 @@ app.addEventListener('click', e => {
   if (a === 'pause') togglePause();
 });
 function togglePause() {
-  paused = !paused;
+  paused = !paused; syncMusic();
   document.querySelector('.overlay')?.remove();
   if (paused) document.body.insertAdjacentHTML('beforeend', `<div class="overlay" role="dialog" aria-modal="true"><div class="panel"><h2>${T('paused')}</h2><button class="primary" id="resume">${T('resume')}</button></div></div>`);
   document.getElementById('resume')?.addEventListener('click', togglePause);

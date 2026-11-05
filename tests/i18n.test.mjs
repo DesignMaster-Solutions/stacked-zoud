@@ -31,3 +31,7 @@ test('settings: saved, then ?a11y on top; plain words keep the numbers', () => {
   assert.deepEqual([s.calm, s.large, s.mute, s.contrast], [true, true, true, false]);
   assert.equal(A.plain('A late fee of AED 50 on the instalment', { plain: true }), 'A charge for paying late of AED 50 on the payment');
 });
+test('the end screen says no interest is not no cost, within what the sources support', () => {
+  assert.match(I.STR.true4[0], /No interest is not the same as no cost/);
+  assert.match(I.STR.true4[0], /30% of the price/);
+});

@@ -112,9 +112,26 @@ test('catch up: paying the late instalment now clears the pause, but the report 
   assert.equal(s.missed, 1, 'the bank still sees the missed instalment');
 });
 test('sales have a clock from month 2; bills never do, so a need cannot be lost by reading it', () => {
-  const want = { id: 'tv', need: false, aed: 2400 }, need = { id: 'fridge', need: true, aed: 1900 };
+  const want = { id: 'tv', need: false, aed: 2400 }, need = { id: 'ac', need: true, aed: 1900 };
   assert.equal(E.hasClock({ m: 1 }, want), false);
   assert.equal(E.hasClock({ m: 2 }, want), true);
   assert.equal(E.hasClock({ m: 2 }, need), false);
   assert.ok(E.OFFER_SECONDS >= 12, 'time to read the offer and three columns');
+});
+
+test('payday flags the instalment that pays a plan off, and only that one', () => {
+  const s = E.newRun(1);
+  s.cash = 1000;
+  E.choose(s, offer(400), 'split');
+  const flags = [];
+  for (s.m = 2; s.m <= 4; s.m++) flags.push(E.payday(s).paid.map(p => !!p.done));
+  assert.deepEqual(flags, [[false], [false], [true]]);
+});
+
+test('column level: calm under 75% of the money line, amber up to it, over above it', () => {
+  assert.equal(E.level(0), 'ok');
+  assert.equal(E.level(0.75 * E.FREE), 'ok');
+  assert.equal(E.level(0.75 * E.FREE + 1), 'warn');
+  assert.equal(E.level(E.FREE), 'warn');
+  assert.equal(E.level(E.FREE + 1), 'over');
 });

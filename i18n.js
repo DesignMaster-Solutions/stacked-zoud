@@ -61,6 +61,7 @@ export const STR = {
   income: ['Money for the month', 'مال الشهر'],
   makeDo: ['Making do without it', 'التدبّر بدونها'],
   paidInst: ['{item}: instalment paid', '{item}: القسط مدفوع'],
+  paidOffStamp: ['PAID OFF', 'مسدَّد بالكامل'],
   missedInst: ['{item}: MISSED, late fee {fee}', '{item}: فات، رسوم تأخير {fee}'],
   collapse: ['The stack fell over.', 'انهار الكوم.'],
   clean: ['All instalments paid.', 'كل الأقساط مدفوعة.'],
@@ -96,6 +97,8 @@ export const STR = {
     'أقصى ما يمكن أن تدين به في هذه الخطط هو 20,000 درهم أو دخلك الصافي لثلاثة أشهر، أيهما أقل.'],
   true3: ['Since July 2026, pay-later plans appear on UAE credit reports. Under the current model they do not change your credit score, but lenders can see them.',
     'منذ يوليو 2026 تظهر خطط الدفع لاحقاً في التقارير الائتمانية في الإمارات. لا تغيّر درجتك الائتمانية في النموذج الحالي، لكن المُقرضين يرونها.'],
+  true4: ['No interest is not the same as no cost: the rules still allow fees on a plan, late fees included, up to 30% of the price. And every instalment spends part of a payday before it arrives.',
+    'بلا فوائد لا يعني بلا تكلفة: القواعد تسمح برسوم على الخطة، ومنها رسوم التأخير، حتى 30% من السعر. وكل قسط يصرف جزءاً من راتب قبل وصوله.'],
   askTitle: ['Before you split, ask', 'قبل أن تقسّم، اسأل'],
   ask1: ['What is the total, and when is the last payment?', 'كم المبلغ الإجمالي، ومتى آخر دفعة؟'],
   ask2: ['What are all the fees, as an amount and as a % of the price?', 'ما كل الرسوم، كمبلغ وكنسبة من السعر؟'],
@@ -106,11 +109,11 @@ export const STR = {
   askSource: ['Based on what UAE rules require providers to tell you (CBUAE Finance Companies Regulation C 3/2023, Art. 24 and 29). Not an official checklist.',
     'مبنية على ما تُلزم القواعد الإماراتية مقدّمي الخدمة بإخبارك به (نظام شركات التمويل C 3/2023، المادتان 24 و29). ليست قائمة رسمية.'],
   // items
-  i_sneakers: ['Sneakers', 'حذاء رياضي'], i_concert: ['Concert tickets', 'تذاكر حفلة'], i_headphones: ['Headphones', 'سماعات'],
+  i_eidoutfit: ['Eid outfit', 'ملابس العيد'], i_concert: ['Concert tickets', 'تذاكر حفلة'], i_headphones: ['Headphones', 'سماعات'],
   i_watch: ['Smart watch', 'ساعة ذكية'], i_console: ['Game console', 'جهاز ألعاب'], i_phone: ['New phone', 'هاتف جديد'],
-  i_sofa: ['Sofa', 'أريكة'], i_trip: ['Weekend trip', 'رحلة نهاية الأسبوع'], i_perfume: ['Perfume', 'عطر'],
-  i_jacket: ['Jacket', 'سترة'], i_dinner: ['Dinner out', 'عشاء في الخارج'], i_tv: ['Big TV', 'تلفاز كبير'],
-  i_car: ['Car repair', 'إصلاح السيارة'], i_fridge: ['The fridge died', 'تعطّلت الثلاجة'], i_school: ['School fees', 'رسوم المدرسة'],
+  i_majlis: ['Majlis sofa', 'كنبة المجلس'], i_hatta: ['Hatta weekend', 'عطلة في حتا'], i_oud: ['Oud perfume', 'عطر عود'],
+  i_eidgifts: ['Eid gifts', 'هدايا العيد'], i_iftar: ['Iftar buffet', 'بوفيه إفطار'], i_tv: ['Big TV', 'تلفاز كبير'],
+  i_car: ['Car repair', 'إصلاح السيارة'], i_ac: ['The AC broke down', 'تعطّل المكيّف'], i_school: ['School fees', 'رسوم المدرسة'],
 };
 
 export function t(key, lang, vars = {}) {

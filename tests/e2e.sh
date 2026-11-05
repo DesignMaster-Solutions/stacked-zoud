@@ -13,6 +13,7 @@ W=$(browse $D js 'return document.querySelector(".title .actions").scrollWidth -
 [[ $W -le 0 ]] || fail "title action row overflows by ${W}px"
 browse $D click --text "Start the season" >/dev/null
 browse $D wait --text "Month 1 of 8" 10 >/dev/null || fail "month 1"
+browse $D wait 'body[data-music=on]' 15 >/dev/null || fail "the music did not start on the first tap"
 [[ $(browse $D js 'return document.querySelectorAll(".col").length') == 4 ]] || fail "four payday columns"
 W=$(browse $D js 'return Math.max(...[...document.querySelectorAll(".actions")].map(a => a.scrollWidth - a.clientWidth))')
 [[ $W -le 0 ]] || fail "offer buttons overflow by ${W}px"
@@ -26,12 +27,25 @@ browse $D wait --text "Payday 2" 10 >/dev/null || fail "payday"
 [[ $(browse $D text .payday) == *"instalment paid"* ]] || fail "first instalment not paid on payday 2"
 W=$(browse $D js 'return document.documentElement.scrollWidth - innerWidth')
 [[ $W -le 0 ]] || fail "page wider than the screen by ${W}px"
+# the split of month 1 is paid off on payday 4: that line gets its own stamp (skip everything until then, calm = no clock)
+for p in 3 4; do
+  sleep 0.5; browse $D click --text "Back to the sales" >/dev/null
+  for i in 1 2 3; do sleep 0.5; browse $D click '[data-act=skip]' >/dev/null; done
+  browse $D wait --text "Payday $p" 10 >/dev/null || fail "payday $p"
+done
+[[ $(browse $D text .payday) == *"PAID OFF"* ]] || fail "payday 4 does not stamp the plan paid off: $(browse $D text .payday | head -6)"
 browse $D open "${U}?seed=7&lang=en&a11y=large&v=$RANDOM" >/dev/null
 browse $D wait --text "STACKED" 20 >/dev/null
 [[ $(browse $D js 'return getComputedStyle(document.documentElement).fontSize') == 21px ]] || fail "Large text does not enlarge the page"
 browse $D open "${U}?seed=7&lang=ar&v=$RANDOM" >/dev/null
 browse $D wait --text "ابدأ الموسم" 20 >/dev/null || fail "arabic title"
 [[ $(browse $D js 'return document.documentElement.dir') == rtl ]] || fail "rtl"
+# Sound off means no music either
+browse $D open "${U}?seed=7&lang=en&a11y=mute,calm&v=$RANDOM" >/dev/null
+browse $D wait --text "STACKED" 20 >/dev/null
+browse $D click --text "Start the season" >/dev/null
+browse $D wait --text "Month 1 of 8" 10 >/dev/null || fail "month 1 (mute)"
+sleep 3; [[ $(browse $D js 'return document.body.dataset.music || "none"') != on ]] || fail "music plays with Sound off"
 # Sales have a clock from month 2, bills never. A tap racing the card change must not act on the next offer (seed 12: month 2 = phone, car repair, sofa).
 browse $D open "${U}?seed=12&lang=en&v=$RANDOM" >/dev/null
 browse $D wait --text "STACKED" 20 >/dev/null

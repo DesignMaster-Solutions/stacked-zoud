@@ -7,8 +7,8 @@ Third entry by Design Master Solutions, after *Snowball* (compound growth) and *
 
 ## The idea
 
-It is sale season in Dubai. Offers keep arriving: sneakers, a phone, a concert, a sofa, and also the things you
-need (a car repair, school fees, a fridge that died). Each offer has three buttons: **pay now**, **split in 4**, **skip**.
+It is sale season in Dubai. Offers keep arriving: an Eid outfit, oud, a phone, a majlis sofa, and also the things you
+need (a car repair, school fees, the AC that broke down). Each offer has three buttons: **pay now**, **split in 4**, **skip**.
 
 Splitting feels free: only a quarter leaves today. The other three quarters drop as blocks into the next paydays,
 which sit on screen as columns. Each column is one month of money left after rent, transport and what you send home.
@@ -43,6 +43,7 @@ closest with one line ("0%" buy-now-pay-later "quietly takes a slice of every fu
 - Concept document (official 6-section template): [docs/CONCEPT.pdf](https://designmaster-solutions.github.io/stacked-zoud/docs/CONCEPT.pdf)
 - Budget: [docs/BUDGET.pdf](https://designmaster-solutions.github.io/stacked-zoud/docs/BUDGET.pdf)
 - itch.io page: https://designmastersolutions.itch.io/stacked
+- Background music in the game (`music.wav`, from build 0.3) and in the video: a mix of Apple Loops from the Chillwave pack (Reverse Hat Beat 01, Harmonic Waves Bass, Guitar, Synth Lead and Synth Pad), used under the Apple Loops licence for use in your own works.
 - Gameplay video (2 min, the submitted build 0.2): https://youtu.be/Z9m0Eh9GUGI (script: [docs/VIDEO.md](docs/VIDEO.md); recorded with `docs/record-video.sh`, cut with `docs/make-video.py`; music: Apple Loops, licensed for commercial use)
 
 ## Facts and sources
@@ -57,6 +58,7 @@ Every fact on screen, checked at the primary source on 4 November 2026 (quotes a
 | At most AED 20,000 or three months of verified net income, whichever is lower. | Same regulation, Art. 23.1. |
 | Affordability check; providers must explain how late payment shows on the credit report. | Same regulation, Art. 23.2, 24.4 to 24.6. |
 | "Before you split, ask": six questions. | Paraphrased from what Art. 24.4, 29.4, 29.6, 29.7 and 29.9 require providers to disclose. Not an official CBUAE checklist. |
+| "No interest is not the same as no cost": interest-free by definition, yet fees up to 30% of the price are allowed. | Same regulation, Art. 4 (Short-Term Credit "without interest being charged") and Art. 23.4 (fees cap). The second half of the line on screen ("every instalment spends part of a payday before it arrives") is the game's own mechanic, not a quote. |
 | Since July 2026, pay-later plans appear on UAE credit reports; under the current model they do not change the credit score, but lenders can see them. | Etihad Credit Bureau, [press release of 27 July 2026](https://etihadbureau.ae/about/newsarticlesearchpage/newsarticles/2026/bnpllaunch) (Tabby and Tamara account information on credit reports from July 2026) and its [FAQ](https://etihadbureau.ae/Support/FAQs): "Under the current Credit Score model, BNPL reporting does not affect your Credit Score." |
 
 Game rules (illustrative, not statistics): monthly money AED 1,800, prices, the AED 50 late fee (the regulation sets no

@@ -14,13 +14,13 @@ export const OFFER_SECONDS = 12; // the sale clock; calm mode turns it off
 
 // Wants: price in AED and the good days they bring. Needs: they come back as a cost if skipped.
 export const WANTS = [
-  { id: 'sneakers', aed: 450, joy: 2 }, { id: 'concert', aed: 600, joy: 3 }, { id: 'headphones', aed: 900, joy: 2 },
+  { id: 'eidoutfit', aed: 450, joy: 2 }, { id: 'concert', aed: 600, joy: 3 }, { id: 'headphones', aed: 900, joy: 2 },
   { id: 'watch', aed: 1500, joy: 2 }, { id: 'console', aed: 2000, joy: 4 }, { id: 'phone', aed: 3200, joy: 4 },
-  { id: 'sofa', aed: 2800, joy: 3 }, { id: 'trip', aed: 2600, joy: 5 }, { id: 'perfume', aed: 380, joy: 1 },
-  { id: 'jacket', aed: 700, joy: 2 }, { id: 'dinner', aed: 320, joy: 2 }, { id: 'tv', aed: 2400, joy: 3 },
+  { id: 'majlis', aed: 2800, joy: 3 }, { id: 'hatta', aed: 2600, joy: 5 }, { id: 'oud', aed: 380, joy: 1 },
+  { id: 'eidgifts', aed: 700, joy: 2 }, { id: 'iftar', aed: 320, joy: 2 }, { id: 'tv', aed: 2400, joy: 3 },
 ];
 export const NEEDS = [
-  { id: 'car', aed: 1600, win: [2, 3] }, { id: 'fridge', aed: 1900, win: [4, 5] }, { id: 'school', aed: 2400, win: [6, 7] },
+  { id: 'car', aed: 1600, win: [2, 3] }, { id: 'ac', aed: 1900, win: [4, 5] }, { id: 'school', aed: 2400, win: [6, 7] },
 ];
 export const BANKS = ['car', 'lease']; // who reads the report at the end: a car loan or the lease renewal
 
@@ -119,7 +119,7 @@ export function payday(s) {
   const paid = [], missed = [];
   for (const p of s.plans) {
     for (const d of p.due.filter(x => x.m === s.m && !x.paid)) {
-      if (s.cash >= d.aed) { s.cash -= d.aed; d.paid = true; paid.push({ id: p.id, aed: d.aed }); continue; }
+      if (s.cash >= d.aed) { s.cash -= d.aed; d.paid = true; paid.push({ id: p.id, aed: d.aed, done: p.due.every(x => x.paid) }); continue; }
       const fee = Math.max(0, Math.min(LATE_FEE, Math.round(p.aed * FEE_CAP) - (p.fees || 0)));
       d.m += 1; d.aed += fee; d.late = true; p.fees = (p.fees || 0) + fee; s.fees += fee; s.missed++; p.red = true; missed.push({ id: p.id, aed: d.aed, fee });
     }
@@ -127,6 +127,9 @@ export function payday(s) {
   }
   return { makeDo, paid, missed };
 }
+
+// How full a payday column looks: amber past 75% of the money line, red past the line.
+export const level = total => (total > FREE ? 'over' : total > 0.75 * FREE ? 'warn' : 'ok');
 
 // The bank reads the report after the last month: missed instalments and what is still owed against the monthly money.
 export function bankDecision(s) {
