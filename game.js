@@ -1,8 +1,8 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=9';
-import * as A from './a11y.js?v=9';
-import * as I from './i18n.js?v=9';
-import * as Art from './art.js?v=9';
+import * as E from './econ.js?v=10';
+import * as A from './a11y.js?v=10';
+import * as I from './i18n.js?v=10';
+import * as Art from './art.js?v=10';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -106,7 +106,7 @@ function offerCard() {
       <button class="primary alt" data-act="split" ${why('split') ? 'disabled' : ''} title="${why('split')}">${T('split', { x: money(q) })}</button>
       <button class="link" data-act="skip">${T('skip')}</button>
     </div>
-    <p class="small why">${[why('now'), why('split')].filter(Boolean).join(' · ')}</p></section>`;
+    <p class="small why">${[...new Set([why('now'), why('split')].filter(Boolean))].join(' · ')}</p></section>`;
 }
 
 function paydayCard() {
