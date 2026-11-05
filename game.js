@@ -1,8 +1,8 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=15';
-import * as A from './a11y.js?v=15';
-import * as I from './i18n.js?v=15';
-import * as Art from './art.js?v=15';
+import * as E from './econ.js?v=16';
+import * as A from './a11y.js?v=16';
+import * as I from './i18n.js?v=16';
+import * as Art from './art.js?v=16';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
