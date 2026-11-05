@@ -82,7 +82,7 @@ test('balance: no pure strategy wins; reading the future does', () => {
   assert.ok(t.planner.joy > t.neverSplit.joy && t.planner.joy > t.alwaysSplit.joy, 'and has the most good days of the three');
   assert.deepEqual(t, JSON.parse(JSON.stringify(TABLE)), 'the table quoted in docs/CONCEPT.md changed');
 });
-const TABLE = {"alwaysSplit":{"approved":0,"declined":98,"fees":360,"joy":20,"cash":339,"skippedNeeds":1.96,"committed":90},"neverSplit":{"approved":100,"declined":0,"fees":0,"joy":20,"cash":838,"skippedNeeds":1.58,"committed":0},"splitNeedsOnly":{"approved":100,"declined":0,"fees":0,"joy":23,"cash":1350,"skippedNeeds":0,"committed":9},"planner":{"approved":86,"declined":0,"fees":0,"joy":23,"cash":994,"skippedNeeds":0.07,"committed":37}};
+const TABLE = {"alwaysSplit":{"approved":0,"declined":98,"fees":360,"joy":20,"cash":340,"skippedNeeds":1.96,"committed":90},"neverSplit":{"approved":100,"declined":0,"fees":0,"joy":20,"cash":838,"skippedNeeds":1.58,"committed":0},"splitNeedsOnly":{"approved":100,"declined":0,"fees":0,"joy":23,"cash":1350,"skippedNeeds":0,"committed":9},"planner":{"approved":86,"declined":0,"fees":0,"joy":23,"cash":993,"skippedNeeds":0.07,"committed":37}};
 
 test('UAE rule: total fees on one plan never pass 30% of the price (CBUAE C 3/2023, Art. 23.4)', () => {
   const s = E.newRun(1);
@@ -92,4 +92,22 @@ test('UAE rule: total fees on one plan never pass 30% of the price (CBUAE C 3/20
   for (s.m = 2; s.m <= 12; s.m++) { s.cash = -E.FREE; E.payday(s); } // the month never has enough money
   assert.equal(s.fees, 120);
   assert.equal(E.owed(s), 300 + 120);
+});
+
+test('catch up: paying the late instalment now clears the pause, but the report keeps the miss', () => {
+  const s = E.newRun(1);
+  s.cash = 4000;
+  E.choose(s, offer(4000), 'split'); E.choose(s, offer(4000), 'split');
+  s.cash = 0; s.m = 2; E.payday(s); // one instalment missed
+  assert.equal(E.red(s), true);
+  const late = E.lateDue(s);
+  assert.equal(late, 1000 + E.LATE_FEE);
+  s.cash = late - 1;
+  assert.equal(E.catchUp(s), false, 'not enough in the wallet');
+  s.cash = late;
+  assert.equal(E.catchUp(s), true);
+  assert.equal(s.cash, 0);
+  assert.equal(E.red(s), false);
+  assert.equal(E.blocked(s, offer(100), 'split'), 'noCash');
+  assert.equal(s.missed, 1, 'the bank still sees the missed instalment');
 });

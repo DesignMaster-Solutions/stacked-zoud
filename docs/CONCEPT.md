@@ -57,10 +57,10 @@ There is no lesson screen. Four lines before the season starts, and after that e
 
 | **Way of playing** | **Bank approves** | **Bank declines** | **Late fees** | **Good days** | **Left in the wallet** | **Needs skipped** | **Payday already spent** |
 |-----------------------------|------:|------:|------:|------:|------:|------:|------:|
-| Split whenever the app allows | 0% | 98% | 360 | 20 | 339 | 1.96 | 90% |
+| Split whenever the app allows | 0% | 98% | 360 | 20 | 340 | 1.96 | 90% |
 | Never split | 100% | 0% | 0 | 20 | 838 | 1.58 | 0% |
 | Split only needs you cannot pay now | 100% | 0% | 0 | 23 | 1,350 | 0 | 9% |
-| Read the columns: split only what fits under half the money line | 86% | 0% | 0 | 23 | 994 | 0.07 | 37% |
+| Read the columns: split only what fits under half the money line | 86% | 0% | 0 | 23 | 993 | 0.07 | 37% |
 
 Splitting whenever the app allows spends 90% of each payday before it arrives and gets declined in 98% of seasons. Never splitting keeps the report clean but leaves about 1.6 needs a season unmet, and the good days fall with them. Using a split for a need that cannot wait, and only when the future columns have room, keeps the report clean, meets the needs and has the most good days.
 

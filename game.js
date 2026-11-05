@@ -1,8 +1,8 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=7';
-import * as A from './a11y.js?v=7';
-import * as I from './i18n.js?v=7';
-import * as Art from './art.js?v=7';
+import * as E from './econ.js?v=8';
+import * as A from './a11y.js?v=8';
+import * as I from './i18n.js?v=8';
+import * as Art from './art.js?v=8';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -14,7 +14,7 @@ const app = document.getElementById('app');
 const auto = params.has('autoplay') ? (E.STRATEGIES[params.get('autoplay')] ? params.get('autoplay') : 'planner') : null;
 const fast = params.has('fast');
 
-let run, phase, idx = 0, pd = null, dropped = null, paused = false, timer = null, left = 0;
+let run, phase, idx = 0, pd = null, dropped = null, paused = false, timer = null, left = 0, timedOut = null;
 const T = (k, v) => A.plain(I.t(k, lang, v), S, lang);
 const money = x => I.aed(x, lang);
 const signed = (sign, x) => `<bdi dir="ltr">${sign}${money(x)}</bdi>`; // keeps the sign next to the number in Arabic
@@ -68,7 +68,7 @@ function board() {
       <div class="foot"><b>${m <= E.MONTHS ? T('pay', { n: m }) : T('pay', { n: m }) + '*'}</b><span>${pct}%</span></div></div>`;
   }).join('');
   return `<section class="board" aria-label="${T('future')}"><h2>${T('future')} <small class="muted">${T('yourMoney', { x: money(E.FREE) })}</small></h2>
-    <div class="cols">${cols}</div>${ghost ? `<p class="muted small">${T('ghost')}</p>` : ''}</section>`;
+    <div class="cols">${cols}</div><div class="limit"><span>${T('limitUsed', { x: money(E.owed(run)), max: money(E.LIMIT) })}</span><i><b style="width:${Math.min(100, 100 * E.owed(run) / E.LIMIT)}%"></b></i></div>${ghost ? `<p class="muted small">${T('ghost')}</p>` : ''}</section>`;
 }
 
 function hud() {
@@ -85,7 +85,9 @@ function report() {
     const st = left === 0 ? 'closed' : p.red ? 'late' : 'onTime';
     return `<li class="${st}" style="--hue:${hue(p.id)}">${Art.icon(p.id)}${item(p.id)} <span>${T(st)}${left ? ' · ' + money(left) : ''}</span></li>`;
   }).join('');
-  return `<aside class="report${E.red(run) ? ' red' : ''}"><h2>${T('report')}</h2>${rows ? `<ul>${rows}</ul>` : `<p class="muted small">${T('reportEmpty')}</p>`}</aside>`;
+  const due = E.lateDue(run);
+  const fix = due && phase === 'offer' ? `<button class="primary alt" data-act="catchup" ${run.cash < due ? 'disabled' : ''}>${T('catchUp', { x: money(due) })}</button><p class="small muted">${T('catchUpWhy')}</p>` : '';
+  return `<aside class="report${E.red(run) ? ' red' : ''}"><h2>${T('report')}</h2>${fix}${rows ? `<ul>${rows}</ul>` : `<p class="muted small">${T('reportEmpty')}</p>`}</aside>`;
 }
 
 // ---------- the offer card ----------
@@ -95,7 +97,7 @@ function offerCard() {
   const why = a => { const b = E.blocked(run, o, a); return b ? T('why_' + b) : ''; };
   const timed = !S.calm && !auto;
   return `<section class="offer${o.need ? ' need' : ''}" style="--hue:${hue(o.id)}" data-id="${o.id}">
-    <div class="tag">${o.need ? T('need') : T('want')} · ${T('offerOf', { i: idx + 1 })}</div>
+    ${timedOut ? `<p class="small why">${T('timedOut', { item: item(timedOut) })}</p>` : ''}<div class="tag">${o.need ? T('need') : T('want')} · ${T('offerOf', { i: idx + 1 })}</div>
     <div class="name">${Art.icon(o.id, "ic big")}${item(o.id)}</div><div class="price">${money(o.aed)}</div>
     ${o.need ? `<p class="small">${T('skipNeed', { x: money(Math.round(o.aed * E.MAKE_DO)) })}</p>` : ''}
     ${timed ? `<div class="clock"><i style="width:100%"></i></div>` : ''}
@@ -163,13 +165,13 @@ function startTimer() {
     const bar = app.querySelector('.clock i');
     if (bar) { bar.style.width = `${100 * left / (E.OFFER_SECONDS * 10)}%`; bar.parentElement.classList.toggle('low', left < 30); }
     if (left % 10 === 0 && left < 30 && left > 0) SND.tick();
-    if (left <= 0) act('skip');
+    if (left <= 0) { const id = offer().id; act('skip'); timedOut = id; if (phase === 'offer') play(); }
   }, 100);
 }
 function stopTimer() { clearInterval(timer); timer = null; }
 
 function act(a) {
-  stopTimer();
+  stopTimer(); timedOut = null;
   const o = offer();
   const done = E.choose(run, o, a);
   if (done === 'split') { dropped = run.plans[run.plans.length - 1]; SND.drop(); }
@@ -219,7 +221,8 @@ app.addEventListener('click', e => {
   const a = b.dataset.act;
   if (a === 'start') start(Number(params.get('seed')) || Math.floor(Math.random() * 1e9));
   if (['now', 'split', 'skip'].includes(a)) act(a);
-  if (a === 'cont') { phase = 'offer'; play(); }
+  if (a === 'cont') { timedOut = null; phase = 'offer'; play(); }
+  if (a === 'catchup' && E.catchUp(run)) { SND.good(); play(); }
   if (a === 'again') title();
   if (a === 'pause') togglePause();
 });

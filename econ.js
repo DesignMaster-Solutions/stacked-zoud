@@ -66,7 +66,18 @@ export function column(s, m) {
   return s.plans.reduce((t, p) => t + p.due.filter(d => d.m === m && !d.paid).reduce((a, d) => a + d.aed, 0), 0);
 }
 export const owed = s => s.plans.reduce((t, p) => t + p.due.filter(d => !d.paid).reduce((a, d) => a + d.aed, 0), 0);
-export const red = s => s.plans.some(p => p.red && p.due.some(d => !d.paid));
+// A plan is late while one of its missed instalments is still unpaid. The miss itself stays on the report (s.missed).
+const lateOf = p => p.due.filter(d => d.late && !d.paid);
+export const red = s => s.plans.some(p => lateOf(p).length > 0);
+export const lateDue = s => s.plans.reduce((t, p) => t + lateOf(p).reduce((a, d) => a + d.aed, 0), 0);
+// Catch up: pay every late instalment now from the wallet, which lifts the pause on new splits.
+export function catchUp(s) {
+  const due = lateDue(s);
+  if (!due || s.cash < due) return false;
+  s.cash -= due;
+  for (const p of s.plans) { for (const d of lateOf(p)) d.paid = true; p.red = false; }
+  return true;
+}
 export const quarter = aed => Math.ceil(aed / SPLIT);
 
 // Can the player do this with this offer right now? Returns null when yes, else the reason (a string key for i18n).
@@ -107,9 +118,9 @@ export function payday(s) {
     for (const d of p.due.filter(x => x.m === s.m && !x.paid)) {
       if (s.cash >= d.aed) { s.cash -= d.aed; d.paid = true; paid.push({ id: p.id, aed: d.aed }); continue; }
       const fee = Math.max(0, Math.min(LATE_FEE, Math.round(p.aed * FEE_CAP) - (p.fees || 0)));
-      d.m += 1; d.aed += fee; p.fees = (p.fees || 0) + fee; s.fees += fee; s.missed++; p.red = true; missed.push({ id: p.id, aed: d.aed, fee });
+      d.m += 1; d.aed += fee; d.late = true; p.fees = (p.fees || 0) + fee; s.fees += fee; s.missed++; p.red = true; missed.push({ id: p.id, aed: d.aed, fee });
     }
-    if (p.due.every(d => d.paid)) p.red = false; // a plan paid off clears from the panel
+    p.red = lateOf(p).length > 0; // paying the late instalment on a later payday also clears it
   }
   return { makeDo, paid, missed };
 }
