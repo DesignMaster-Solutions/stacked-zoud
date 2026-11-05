@@ -38,16 +38,24 @@ plan is small, the stack is not. (Keyword scan of the 30 itch pages; re-check be
 | Localization bonus UAE (5) | AED, English + Arabic (RTL), UAE sale seasons and the UAE rules on BNPL and credit reports. |
 | Inclusivity & Accessibility bonus (5) | Same package as Snowball: large text, high contrast, calm speed (no timers), simple words, sound off, pause. |
 
-## Facts the game may state (each one verified at the primary source before it ships)
+## Facts and sources
 
-- The Central Bank of the UAE brought BNPL under its Finance Companies Regulation as short-term credit
-  (no interest, affordability assessment, fee cap). Check the CBUAE Rulebook text and date before quoting any number.
-- Al Etihad Credit Bureau announced on 27 July 2026 that BNPL account information from Tabby and Tamara appears in UAE
-  credit reports, without affecting the AECB score under the current model. Check the AECB announcement itself.
-- Sale seasons used in the game (White Friday, Dubai Shopping Festival): dates from the organisers.
+Every fact on screen, checked at the primary source on 4 November 2026 (quotes and article numbers in
+[docs/FACTS.md](docs/FACTS.md)). Everything else on screen is a game rule and is labelled illustrative in the game.
 
-Anything on screen that is not in a "Facts and sources" section with a link is illustrative and labelled as such.
-BNPL providers, shops and banks in the game are **fictional**: no real brand is named, shown or rated.
+| On screen | Primary source |
+|---|---|
+| Pay-later is short-term credit: 12 months or less, for specific goods or services, no interest, no collateral. | Central Bank of the UAE, [Finance Companies Regulation C 3/2023](https://rulebook.centralbank.ae/en/rulebook/finance-companies-regulation-0) (effective 29/9/2023), Art. 1 definition of Short-Term Credit; announced in the CBUAE [press release of 27 December 2023](https://centralbank.ae/media/izlhi5rb/cbuae-introduces-framework-for-the-regulation-of-short-term-credit-facilities_en.pdf) as the framework for "Buy-Now, Pay-Later". |
+| All fees on one plan, late fees included, at most 30% of the price (the game enforces this per plan). | Same regulation, Art. 23.4: "must not exceed 30% of the original credit amount ... must not total more that 130%". |
+| At most AED 20,000 or three months of verified net income, whichever is lower. | Same regulation, Art. 23.1. |
+| Affordability check; providers must explain how late payment shows on the credit report. | Same regulation, Art. 23.2, 24.4 to 24.6. |
+| "Before you split, ask": six questions. | Paraphrased from what Art. 24.4, 29.4, 29.6, 29.7 and 29.9 require providers to disclose. Not an official CBUAE checklist. |
+| Since July 2026, pay-later plans appear on UAE credit reports; under the current model they do not change the credit score, but lenders can see them. | Etihad Credit Bureau, [press release of 27 July 2026](https://etihadbureau.ae/about/newsarticlesearchpage/newsarticles/2026/bnpllaunch) (Tabby and Tamara account information on credit reports from July 2026) and its [FAQ](https://etihadbureau.ae/Support/FAQs): "Under the current Credit Score model, BNPL reporting does not affect your Credit Score." |
+
+Game rules (illustrative, not statistics): monthly money AED 1,800, prices, the AED 50 late fee (the regulation sets no
+AED amount, only that late fees are "reasonable"), the in-game app limit, the make-do cost of skipping a need and the
+bank's decision rule. BNPL apps, shops and banks in the game are **fictional**: no real brand is named, shown or rated
+inside the game; the two providers above are named here only because the bureau's announcement names them.
 
 ## What the jam requires (all in the itch.io submission form)
 

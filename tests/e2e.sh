@@ -31,6 +31,7 @@ for st in planner alwaysSplit; do
   X=$(node -e "import('$PWD/econ.js').then(E=>{const r=E.simulate('$st',7);console.log(r.fees+','+r.cash)})")
   G=$(browse $D js 'return [...document.querySelectorAll(".stats div")].filter(d => /Late fees|Left in the wallet/.test(d.textContent)).map(d => d.querySelector("b").textContent.replace(/\D/g,"")).join()')
   [[ $G == $X ]] || fail "$st on the device ($G) differs from econ.js in node ($X): same seed must give the same season"
+  [[ $(browse $D text .facts) == *"30% of the price"* ]] || fail "$st: the end screen lost the UAE facts"
   print "$st: $(browse $D text .stamp) · fees,cash $G = node $X"
 done
 print "E2E OK on $D"

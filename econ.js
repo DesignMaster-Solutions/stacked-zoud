@@ -5,7 +5,8 @@ export const OFFERS_PER_MONTH = 3;
 export const FREE = 1800; // AED a month left after rent, transport and what you send home (the player's job in the game)
 export const START_CASH = 800; // in the wallet on day one
 export const SPLIT = 4; // pay in 4: one today, three on the next three paydays
-export const LATE_FEE = 50; // game rule, per missed instalment (illustrative; see README for the UAE fee cap)
+export const LATE_FEE = 50; // game rule, per missed instalment (illustrative: UAE rules set no AED amount, only that it is "reasonable")
+export const FEE_CAP = 0.30; // UAE rule: all fees on one plan, late fees included, at most 30% of the price (CBUAE C 3/2023, Art. 23.4)
 export const LIMIT = 7000; // the game's BNPL app lets you owe at most this much across open plans
 export const MAKE_DO = 0.4; // skipping a need costs 40% of its price next payday (taxis instead of the car, eating out with no fridge)
 export const NEED_PAIN = 4; // good days lost when a need is skipped (no car for a month is a bad month)
@@ -105,7 +106,8 @@ export function payday(s) {
   for (const p of s.plans) {
     for (const d of p.due.filter(x => x.m === s.m && !x.paid)) {
       if (s.cash >= d.aed) { s.cash -= d.aed; d.paid = true; paid.push({ id: p.id, aed: d.aed }); continue; }
-      d.m += 1; d.aed += LATE_FEE; s.fees += LATE_FEE; s.missed++; p.red = true; missed.push({ id: p.id, aed: d.aed });
+      const fee = Math.max(0, Math.min(LATE_FEE, Math.round(p.aed * FEE_CAP) - (p.fees || 0)));
+      d.m += 1; d.aed += fee; p.fees = (p.fees || 0) + fee; s.fees += fee; s.missed++; p.red = true; missed.push({ id: p.id, aed: d.aed, fee });
     }
     if (p.due.every(d => d.paid)) p.red = false; // a plan paid off clears from the panel
   }
