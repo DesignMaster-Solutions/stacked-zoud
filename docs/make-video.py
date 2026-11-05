@@ -9,18 +9,20 @@ FONT = '/System/Library/Fonts/Avenir Next.ttc'
 def dur(f):
     return float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]))
 
-# (segment, trim start, hold extra seconds at the end, captions as (from, to, text); negative = seconds before the end)
+# Each segment: a recording (name.mp4: trim start, max seconds) or a still of the same build (name.png: seconds), and its
+# captions as (from, to, text); negative times count from the end. Stills cover the static screens, because the
+# DevTools screencast sends no frames while nothing on the page changes.
 SEGS = [
-    ('s1-title', 0, 2.5, [(0, -0.01, 'Every "pay in 4" lands on a payday you have not lived yet.')]),
-    ('s2-greedy', 1.5, 0, [(0, 13, 'Split whenever you can: only a quarter leaves today.'),
-                           (13, 27, 'The other three quarters stack on your next paydays.'),
-                           (27, -9, 'A column taller than your money misses: late fee, red report, no new splits.'),
-                           (-9, -0.01, 'The bank reads the report: declined.')]),
-    ('s3-planner', 1.5, 0, [(0, -8, 'Same season. Read the columns first: pay now when you can, split only what fits.'),
-                            (-8, -0.01, 'Approved: no late fees and no needs skipped.')]),
-    ('s4-facts', 4, 0, [(0, -0.01, 'Real UAE rules: all fees capped at 30% of the price.\nPay-later plans on credit reports since July 2026.')]),
-    ('s5-arabic', 0, 0, [(0, -0.01, 'English and Arabic, right to left.')]),
-    ('s6-a11y', 0, 0, [(0, -0.01, 'Large text, high contrast, calm mode with no timer.')]),
+    dict(src='s1-title.mp4', trim=0, max=7, caps=[(0, -0.01, 'Every "pay in 4" lands on a payday you have not lived yet.')]),
+    dict(src='s2-greedy.mp4', trim=1.5, caps=[(0, 13, 'Split whenever you can: only a quarter leaves today.'),
+                                             (13, 26, 'The other three quarters stack on your next paydays.'),
+                                             (26, -0.01, 'A column taller than your money misses: late fee, red report, no new splits.')]),
+    dict(src='end-alwaysSplit.png', secs=5, caps=[(0, -0.01, 'Declined: 86% of each payday was spent before it arrived.')]),
+    dict(src='s3-planner.mp4', trim=1.5, caps=[(0, -0.01, 'Same season. Read the columns first: pay now when you can, split only what fits.')]),
+    dict(src='end-planner.png', secs=5, caps=[(0, -0.01, 'Approved: no late fees, no needs skipped, AED 1,909 left.')]),
+    dict(src='p4-facts.png', secs=8, caps=[(0, -0.01, 'Real UAE rules: all fees capped at 30% of the price.\nPay-later plans on credit reports since July 2026.')]),
+    dict(src='p5-arabic.png', secs=5.5, caps=[(0, -0.01, 'English and Arabic, right to left.')]),
+    dict(src='p6-a11y.png', secs=5.5, caps=[(0, -0.01, 'Large text, high contrast, calm mode with no timer.')]),
 ]
 SPEED = float(os.environ.get('SPEED', '1.55'))  # >1 speeds the two long runs up if the total passes 2:00
 
@@ -42,13 +44,17 @@ def render(src_args, length_known, caps, dst, vf_pre):
                     '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', dst], check=True)
 
 parts = []
-for name, trim, hold, caps in SEGS:
-    src = os.path.join(V, name + '.mp4')
-    sp = SPEED if name in ('s2-greedy', 's3-planner') else 1
-    length = (dur(src) - trim) / sp + hold
+for seg in SEGS:
+    src = os.path.join(V, seg['src']); name = seg['src'].rsplit('.', 1)[0]
     dst = os.path.join(V, f'.p-{name}.mp4')
-    render(['-ss', str(trim), '-i', src], length, caps, dst,
-           f"setpts=(PTS-STARTPTS)/{sp},scale=1920:1080:flags=lanczos,tpad=stop_mode=clone:stop_duration={hold},fps=30")
+    if src.endswith('.png'):
+        length = seg['secs']
+        render(['-loop', '1', '-t', str(length), '-i', src], length, seg['caps'], dst, 'scale=1920:1080:flags=lanczos,fps=30')
+    else:
+        sp = SPEED if name in ('s2-greedy', 's3-planner') else 1
+        length = min((dur(src) - seg['trim']) / sp, seg.get('max', 1e9))
+        render(['-ss', str(seg['trim']), '-t', str(length * sp), '-i', src], length, seg['caps'], dst,
+               f"setpts=(PTS-STARTPTS)/{sp},scale=1920:1080:flags=lanczos,fps=30")
     parts.append((dst, dur(dst)))
 
 card = os.path.join(V, '.p-card.mp4')
