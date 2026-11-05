@@ -20,11 +20,11 @@ next month was already spent before it started, the fees, what you bought, and w
 
 ## Why this one is different
 
-Among the 30 jam entries on 04/11/2026, the words "pay later" appear once each on the pages of 4 entries
-(Rainy Day, Makola Mogul, Future Me, Rainy Day: The Budget Party Game), all of them broad money-life games; credit score
-shows up as one stat among many in a few others (My DUNYA, RENT DUE, The Billionaire). None of the pages describes a game
-built around **instalments stacking on future income**, which is the mechanic that makes buy-now-pay-later risky: each
-plan is small, the stack is not. (Keyword scan of the 30 itch pages; re-check before the concept doc repeats it.)
+Re-checked on 4 November 2026 against the 31 entries of the jam (`entries.json` of the jam, then each page's description):
+eight mention pay-later, each as one offer, event or lesson among many (The Honey Road, Smart Phone: Money or Likes?,
+Rainy Day: The Budget Party Game, Makola Mogul, Autopay 06:00, Rainy Day, ZARF — Twelve Paydays, Future Me). ZARF comes
+closest with one line ("0%" buy-now-pay-later "quietly takes a slice of every future salary"). None is built around
+**instalments stacking on future income**, the mechanic that makes buy-now-pay-later risky: each plan is small, the stack is not.
 
 ## Rubric map (official weights 25/25/15/15/20 + 5 + 5)
 

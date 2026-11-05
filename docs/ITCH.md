@@ -12,7 +12,7 @@ Sale season in Dubai. Every "pay in 4" lands on a payday you have not lived yet.
 <p><strong>What you learn by playing:</strong> pay-later is credit; each plan is small, the stack is not; a missed instalment costs fees and shows on your report; needs and wants compete for the same future paydays; and how much of next month is already spent before it starts.</p>
 <p><strong>Real UAE rules, cited in the repository:</strong> the Central Bank of the UAE treats pay-later plans as short-term credit (Finance Companies Regulation C 3/2023): no interest, an affordability check, and all fees on a plan capped at 30% of the price, which the game enforces. Since July 2026, pay-later plans appear on UAE credit reports (Etihad Credit Bureau); under the current model they do not change the credit score, but lenders can see them. Shops, the app and the bank in the game are fictional; prices, income and the AED 50 late fee are illustrative.</p>
 <p><strong>UAE edition and accessibility:</strong> English and Arabic (right to left), money in dirhams. Settings on the title screen: large text, high contrast, calm (no offer timer), plain words, sound off; Pause in the top bar, or Esc.</p>
-<p>About 6 to 8 minutes a season, one thumb. Plays on phones and desktops. Made by Design Master Solutions. Code: <a href="https://github.com/DesignMaster-Solutions/stacked-zoud">github.com/DesignMaster-Solutions/stacked-zoud</a>.</p>
+<p>Eight paydays and 24 offers a season, one thumb. Plays on phones and desktops. Made by Design Master Solutions. Code: <a href="https://github.com/DesignMaster-Solutions/stacked-zoud">github.com/DesignMaster-Solutions/stacked-zoud</a>.</p>
 
 ## Instructions
 

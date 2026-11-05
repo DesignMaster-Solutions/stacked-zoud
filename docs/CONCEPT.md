@@ -13,12 +13,12 @@ Stacked is a short one-thumb game about buy now, pay later. It is sale season in
 | **Title and genre** | Stacked (مُكدَّس). Light strategy with falling blocks, one sale season in eight paydays |
 | **Platform** | Any browser today, by touch, mouse or keyboard, on a phone held upright or on a desktop. iOS and Android come with funding |
 | **Audience** | Young adults and new workers in the UAE who shop on their phone, students who will soon, and the schools, universities and employers that run financial wellbeing sessions for them |
-| **Length** | A season of eight paydays and 24 offers takes 6 to 8 minutes, so it fits a break, a commute or a class |
+| **Length** | One season: eight paydays and 24 offers, a few minutes, so it fits a break, a commute or a class (we have not timed real players yet) |
 | **Editions** | English and Arabic (right to left), money in dirhams |
 
 **Why this subject.** In the UAE, pay-later plans are credit. The Central Bank of the UAE brought them under its Finance Companies Regulation as short-term credit, and since July 2026 the Etihad Credit Bureau shows pay-later plans on UAE credit reports. A plan is small and interest-free, so it does not feel like borrowing. Its danger is the stack: four plans that each look easy can take most of a payday that has not arrived yet.
 
-**What makes it different.** Of the 30 entries in this jam on 4 November 2026, the words "pay later" appear once each on the pages of four entries, all of them broad money-life games, and credit score shows up as one stat among many in a few others. None is built around instalments stacking on future income. In Stacked, the future paydays are the board.
+**What makes it different.** Of the 31 entries in this jam on 4 November 2026, eight mention pay-later on their pages, each as one offer, event or lesson among many: a phone on pay-later in Smart Phone: Money or Likes? and Future Me, a "Pay now, buy now pay later" card in Rainy Day: The Budget Party Game, a line in ZARF — Twelve Paydays saying a 0% plan "quietly takes a slice of every future salary". None is built around that slice. In Stacked, the future paydays are the board: every instalment is a block you watch land on a payday you have not lived yet, and the bank reads the report at the end.
 
 ## 2. Core Gameplay
 
@@ -126,6 +126,6 @@ The plan is six months and 960 hours, and the budget shows what ships at each fu
 
 ## 6. Your Team
 
-**Alan De Bortolo (Brazil), Design Master Solutions LLC (Massachusetts, USA).** Solo entry; our other entries in this jam are [Snowball](https://designmastersolutions.itch.io/snowball) and Send Home. Stacked was built with an AI coding agent (Claude) under my direction: the code, the Arabic text, and drafts of the design and of this document, as disclosed in the submission. No image, music or voice generation models were used. The money model is checked by automated tests and the game is tested on real devices.
+**Alan De Bortolo (Brazil), Design Master Solutions LLC (Massachusetts, USA).** Solo entry; our other entries in this jam are [Snowball](https://designmastersolutions.itch.io/snowball) and [Send Home](https://designmastersolutions.itch.io/send-home). Stacked was built with an AI coding agent (Claude) under my direction: the code, the Arabic text, and drafts of the design and of this document, as disclosed in the submission. No image, music or voice generation models were used. The money model is checked by automated tests and the game is tested on real devices.
 
 **Relevant experience.** The studio designs, codes, hosts and supports its own software products (Stone Project is live on iOS, Android, Mac, Windows and the web) and builds iOS and Android apps for clients, so store releases, support and localization are everyday work. Alan also builds LAPI, a personal and family finance app in Brazil (lapiapp.com), so how people really handle money is familiar ground.
