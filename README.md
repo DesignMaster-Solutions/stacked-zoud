@@ -43,6 +43,7 @@ plan is small, the stack is not. (Keyword scan of the 30 itch pages; re-check be
 - Concept document (official 6-section template): [docs/CONCEPT.pdf](https://designmaster-solutions.github.io/stacked-zoud/docs/CONCEPT.pdf)
 - Budget: [docs/BUDGET.pdf](https://designmaster-solutions.github.io/stacked-zoud/docs/BUDGET.pdf)
 - itch.io page: https://designmastersolutions.itch.io/stacked
+- Gameplay video (2 min, the submitted build 0.2): https://youtu.be/Z9m0Eh9GUGI (script: [docs/VIDEO.md](docs/VIDEO.md); recorded with `docs/record-video.sh`, cut with `docs/make-video.py`; music: Apple Loops, licensed for commercial use)
 
 ## Facts and sources
 
