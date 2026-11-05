@@ -32,6 +32,8 @@ export function rng(seed) { // mulberry32: same seed, same season
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+// Fisher-Yates with our rng: the same seed gives the same order in every JS engine (sort with a random comparator does not).
+function shuffle(a, r) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 const jitter = (r, aed) => Math.round(aed * (0.9 + 0.2 * r()) / 10) * 10;
 
 // The season: offers[m] = the offers of month m (1..MONTHS). One need lands in its window, the rest are wants.
@@ -44,11 +46,11 @@ export function season(seed) {
     offers[m] = [];
     for (const n of needAt.filter(x => x.m === m)) offers[m].push({ id: n.id, need: true, aed: jitter(r, n.aed), joy: 0 });
     while (offers[m].length < OFFERS_PER_MONTH) {
-      if (!bag.length) bag = [...WANTS].sort(() => r() - 0.5);
+      if (!bag.length) bag = shuffle([...WANTS], r);
       const w = bag.pop();
       offers[m].push({ id: w.id, need: false, aed: jitter(r, w.aed), joy: w.joy });
     }
-    offers[m].sort(() => r() - 0.5);
+    shuffle(offers[m], r);
   }
   return { seed, offers, bank: BANKS[Math.floor(r() * BANKS.length)] };
 }
