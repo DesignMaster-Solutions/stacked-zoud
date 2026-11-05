@@ -78,7 +78,18 @@
   .report.red{box-shadow:0 0 0 3px var(--red)}
   .report ul{list-style:none;margin:0;padding:0}
   .report li{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:.9rem}
-  .report li i{width:12px;height:12px;border-radius:3px;background:hsl(var(--hue) 70% 58%);flex:none}
+  .ic{width:18px;height:18px;flex:none;color:hsl(var(--hue) 75% 62%)}
+  .ic.big{width:34px;height:34px;vertical-align:-6px;margin-inline-end:8px}
+  .blk .ic{display:block;margin:3px auto 0;width:16px;height:16px;color:var(--ink)}
+  .blk.late .ic{color:#fff}
+  .ledger .in{animation:rise .3s ease-out both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}}
+  .clock.low{animation:pulse .5s ease-in-out infinite alternate}
+  @keyframes pulse{to{transform:scaleY(1.6)}}
+  .offer{animation:tag .35s cubic-bezier(.2,.9,.3,1) both}
+  @keyframes tag{from{opacity:0;transform:translateX(24px) rotate(1.5deg)}}
+  [dir=rtl] .offer{animation-name:tagr}
+  @keyframes tagr{from{opacity:0;transform:translateX(-24px) rotate(-1.5deg)}}
   .report li span{margin-inline-start:auto;color:var(--teal);white-space:nowrap}
   .report li.late span{color:var(--red);font-weight:700} .report li.closed span{color:var(--muted)}
   .end{max-width:640px;margin:0 auto}
@@ -97,6 +108,6 @@
 <body>
 <main id="app" aria-live="polite"></main>
 <noscript>Stacked needs JavaScript.</noscript>
-<script type="module" src="game.js?v=5"></script>
+<script type="module" src="game.js?v=6"></script>
 </body>
 </html>

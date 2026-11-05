@@ -1,7 +1,8 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=5';
-import * as A from './a11y.js?v=5';
-import * as I from './i18n.js?v=5';
+import * as E from './econ.js?v=6';
+import * as A from './a11y.js?v=6';
+import * as I from './i18n.js?v=6';
+import * as Art from './art.js?v=6';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -59,7 +60,7 @@ function board() {
     for (const p of run.plans) for (const d of p.due) if (d.m === m && !d.paid) blocks.push({ id: p.id, aed: d.aed, red: p.red, fresh: dropped === p });
     const total = blocks.reduce((a, b) => a + b.aed, 0);
     const over = total > E.FREE;
-    const html = blocks.map((b, i) => `<i class="blk${b.red ? ' late' : ''}${b.fresh && moving() ? ' drop' : ''}" style="--h:${Math.max(10, b.aed * SCALE)}px;--hue:${hue(b.id)};--d:${k * 90 + i * 20}ms" title="${item(b.id)} ${money(b.aed)}"><span>${money(b.aed)}</span></i>`).join('')
+    const html = blocks.map((b, i) => `<i class="blk${b.red ? ' late' : ''}${b.fresh && moving() ? ' drop' : ''}" style="--h:${Math.max(10, b.aed * SCALE)}px;--hue:${hue(b.id)};--d:${k * 90 + i * 20}ms" title="${item(b.id)} ${money(b.aed)}">${b.aed * SCALE >= 24 ? Art.icon(b.id) : ""}<span>${money(b.aed)}</span></i>`).join('')
       + (ghost && k <= 3 ? `<i class="blk ghost" style="--h:${ghost * SCALE}px;--hue:${hue(o.id)}"><span>+${money(ghost)}</span></i>` : '');
     const pct = Math.round(100 * total / E.FREE);
     return `<div class="col${over ? ' over' : ''}" data-m="${m}"><div class="stack">${html}<b class="line" style="bottom:${E.FREE * SCALE}px"></b></div>
@@ -81,7 +82,7 @@ function report() {
   const rows = plans.map(p => {
     const left = p.due.filter(d => !d.paid).reduce((a, d) => a + d.aed, 0);
     const st = left === 0 ? 'closed' : p.red ? 'late' : 'onTime';
-    return `<li class="${st}" style="--hue:${hue(p.id)}"><i></i>${item(p.id)} <span>${T(st)}${left ? ' · ' + money(left) : ''}</span></li>`;
+    return `<li class="${st}" style="--hue:${hue(p.id)}">${Art.icon(p.id)}${item(p.id)} <span>${T(st)}${left ? ' · ' + money(left) : ''}</span></li>`;
   }).join('');
   return `<aside class="report${E.red(run) ? ' red' : ''}"><h2>${T('report')}</h2>${rows ? `<ul>${rows}</ul>` : `<p class="muted small">${T('reportEmpty')}</p>`}</aside>`;
 }
@@ -94,7 +95,7 @@ function offerCard() {
   const timed = !S.calm && !auto;
   return `<section class="offer${o.need ? ' need' : ''}" style="--hue:${hue(o.id)}" data-id="${o.id}">
     <div class="tag">${o.need ? T('need') : T('want')} · ${T('offerOf', { i: idx + 1 })}</div>
-    <div class="name">${item(o.id)}</div><div class="price">${money(o.aed)}</div>
+    <div class="name">${Art.icon(o.id, "ic big")}${item(o.id)}</div><div class="price">${money(o.aed)}</div>
     ${o.need ? `<p class="small">${T('skipNeed', { x: money(Math.round(o.aed * E.MAKE_DO)) })}</p>` : ''}
     ${timed ? `<div class="clock"><i style="width:100%"></i></div>` : ''}
     <div class="actions">
@@ -139,8 +140,17 @@ function play() {
   app.innerHTML = `${hud()}<div class="layout"><div class="main">${board()}${phase === 'offer' ? offerCard() : paydayCard()}</div>${report()}</div>`;
   dropped = null;
   if (phase === 'offer') startTimer();
-  if (phase === 'payday' && pd.missed.length) { SND.crash(); if (moving()) app.querySelector('.board')?.classList.add('shake'); }
+  if (phase === 'payday') paydayJuice();
   if (auto) setTimeout(autoStep, fast ? 120 : 900);
+}
+
+// Payday reads out line by line: a coin per instalment paid, a crash and a shake for each one missed.
+function paydayJuice() {
+  const rows = [...app.querySelectorAll('.ledger div')];
+  if (!moving()) { if (pd.missed.length) SND.crash(); return; }
+  rows.forEach((r, i) => { r.classList.add('in'); r.style.animationDelay = `${i * 160}ms`;
+    setTimeout(() => (r.classList.contains('bad') ? SND.crash() : SND.coin()), i * 160); });
+  if (pd.missed.length) setTimeout(() => app.querySelector('.board')?.classList.add('shake'), rows.length * 160);
 }
 
 function startTimer() {
