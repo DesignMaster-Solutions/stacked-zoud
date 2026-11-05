@@ -45,7 +45,7 @@ Every fact on screen, checked at the primary source on 4 November 2026 (quotes a
 
 | On screen | Primary source |
 |---|---|
-| Pay-later is short-term credit: 12 months or less, for specific goods or services, no interest, no collateral. | Central Bank of the UAE, [Finance Companies Regulation C 3/2023](https://rulebook.centralbank.ae/en/rulebook/finance-companies-regulation-0) (effective 29/9/2023), Art. 1 definition of Short-Term Credit; announced in the CBUAE [press release of 27 December 2023](https://centralbank.ae/media/izlhi5rb/cbuae-introduces-framework-for-the-regulation-of-short-term-credit-facilities_en.pdf) as the framework for "Buy-Now, Pay-Later". |
+| Pay-later is short-term credit: 12 months or less, for specific goods or services, no interest, no collateral. | Central Bank of the UAE, [Finance Companies Regulation C 3/2023](https://rulebook.centralbank.ae/en/rulebook/finance-companies-regulation-0) (effective 29/9/2023), Art. 4 definition of Short-Term Credit; announced in the CBUAE [press release of 27 December 2023](https://centralbank.ae/media/izlhi5rb/cbuae-introduces-framework-for-the-regulation-of-short-term-credit-facilities_en.pdf) as the framework for "Buy-Now, Pay-Later". |
 | All fees on one plan, late fees included, at most 30% of the price (the game enforces this per plan). | Same regulation, Art. 23.4: "must not exceed 30% of the original credit amount ... must not total more that 130%". |
 | At most AED 20,000 or three months of verified net income, whichever is lower. | Same regulation, Art. 23.1. |
 | Affordability check; providers must explain how late payment shows on the credit report. | Same regulation, Art. 23.2, 24.4 to 24.6. |
