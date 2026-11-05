@@ -2,7 +2,7 @@
 
 **Game Concept Document** for Zoud GameLab 2026, theme: Make FinLit Fun. Describes the build of 4 November 2026; it is updated with the build that is submitted.
 
-[Play in the browser](https://designmaster-solutions.github.io/stacked-zoud/) · [Arabic edition](https://designmaster-solutions.github.io/stacked-zoud/?lang=ar) · [itch.io page](https://designmastersolutions.itch.io/stacked) · [2-minute gameplay video](https://youtu.be/Z9m0Eh9GUGI) · [Game budget (separate document)](https://designmaster-solutions.github.io/stacked-zoud/docs/BUDGET.pdf) · [Source code](https://github.com/DesignMaster-Solutions/stacked-zoud)
+[Play in the browser](https://designmaster-solutions.github.io/stacked-zoud/) · [Arabic edition](https://designmaster-solutions.github.io/stacked-zoud/?lang=ar) · [itch.io page](https://designmastersolutions.itch.io/stacked) · [2-minute gameplay video](https://youtu.be/gRgtcD8iafQ) · [Game budget (separate document)](https://designmaster-solutions.github.io/stacked-zoud/docs/BUDGET.pdf) · [Source code](https://github.com/DesignMaster-Solutions/stacked-zoud)
 
 ## 1. Game Overview
 
@@ -33,8 +33,8 @@ Stacked is a short one-thumb game about buy now, pay later. It is sale season in
 
 | | | |
 |-----------------------|-----------------------|-----------------------|
-| ![The next four paydays, with dashed blocks where a split would land](shots/v02-1-split.png) | ![Payday 5: three instalments missed, late fees, the report in red](shots/v02-2-crash.png) | ![The bank's decision and the season in numbers](shots/v02-4-declined.png) |
-| The future, visible | The stack falls over | The bank decides |
+| ![The next four paydays, with dashed blocks where a split would land](shots/v03-1-split.png) | ![Payday 4: three plans paid off, two instalments missed, the report in red](shots/v03-2-crash.png) | ![The bank's decision and the season in numbers](shots/v03-4-declined.png) |
+| The future, visible | Paid off and missed on one payday | The bank decides |
 
 **Decisions and progress.** Pay now and keep the future clear, or split and keep cash for the need that may come? Is this column still under the money line? Which plan do you let go red? The season builds: three needs land in fixed windows, the columns fill, and the last splits of the season are still owed when the bank reads the report. The bank gives one of three answers (approved, approved with conditions, declined) and the summary shows how much of each payday was already spent before it arrived, how much of next month is spent, the late fees, what is still owed, what you bought, the needs you skipped, what is left in the wallet and your good days.
 
@@ -82,7 +82,7 @@ The game ends with six questions to ask before splitting, based on what UAE rule
 
 | | |
 |-----------------------|-----------------------|
-| ![An offer in the Arabic edition, right to left](shots/v02-6-arabic.png) | ![What is true in the UAE, and six questions to ask before you split](shots/v02-7-facts.png) |
+| ![An offer in the Arabic edition, right to left](shots/v03-6-arabic.png) | ![What is true in the UAE, and six questions to ask before you split](shots/v03-7-facts.png) |
 | An offer in Arabic, right to left | The facts at the end |
 
 **Art direction.** A night sale in deep blue with saffron for money and coral red for trouble. Every item has its own colour and its own pictogram, so a plan reads as the same block in every column and on the report. Blocks fall with weight, a missed instalment turns its block into red stripes and shakes the board. Everything is drawn in code, with no image files, so the game loads on a weak phone connection.

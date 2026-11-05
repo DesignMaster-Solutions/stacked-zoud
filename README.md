@@ -44,7 +44,7 @@ closest with one line ("0%" buy-now-pay-later "quietly takes a slice of every fu
 - Budget: [docs/BUDGET.pdf](https://designmaster-solutions.github.io/stacked-zoud/docs/BUDGET.pdf)
 - itch.io page: https://designmastersolutions.itch.io/stacked
 - Background music in the game (`music.wav`, from build 0.3) and in the video: a mix of Apple Loops from the Chillwave pack (Reverse Hat Beat 01, Harmonic Waves Bass, Guitar, Synth Lead and Synth Pad), used under the Apple Loops licence for use in your own works.
-- Gameplay video (2 min, the submitted build 0.2): https://youtu.be/Z9m0Eh9GUGI (script: [docs/VIDEO.md](docs/VIDEO.md); recorded with `docs/record-video.sh`, cut with `docs/make-video.py`; music: Apple Loops, licensed for commercial use)
+- Gameplay video (2 min, the submitted build 0.3): https://youtu.be/gRgtcD8iafQ (script: [docs/VIDEO.md](docs/VIDEO.md); recorded with `docs/record-video.sh`, cut with `docs/make-video.py`; music: Apple Loops, licensed for commercial use)
 
 ## Facts and sources
 

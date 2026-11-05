@@ -14,9 +14,9 @@ def dur(f):
 # DevTools screencast sends no frames while nothing on the page changes.
 SEGS = [
     dict(src='s1-title.mp4', trim=0, max=7, caps=[(0, -0.01, 'Every "pay in 4" lands on a payday you have not lived yet.')]),
-    dict(src='s2-greedy.mp4', trim=1.5, caps=[(0, 13, 'Split whenever you can: only a quarter leaves today.'),
-                                             (13, 26, 'The other three quarters stack on your next paydays.'),
-                                             (26, -0.01, 'A column taller than your money misses: late fee, red report, no new splits.')]),
+    dict(src='s2-greedy.mp4', trim=1.5, caps=[(0, 7, 'Split whenever you can: only a quarter leaves today.'),
+                                             (7, 13, 'The other three quarters stack on your next paydays.'),
+                                             (13, -0.01, 'Wallet empty on payday: a missed instalment, a late fee, a red report.')]),
     dict(src='end-alwaysSplit.png', secs=5, caps=[(0, -0.01, 'Declined: 86% of each payday was spent before it arrived.')]),
     dict(src='s3-planner.mp4', trim=1.5, caps=[(0, -0.01, 'Same season. Read the columns first: pay now when you can, split only what fits.')]),
     dict(src='end-planner.png', secs=5, caps=[(0, -0.01, 'Approved: no late fees, no needs skipped, AED 1,909 left.')]),

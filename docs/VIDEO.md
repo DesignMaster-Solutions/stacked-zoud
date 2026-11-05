@@ -16,7 +16,7 @@ build at https://designmaster-solutions.github.io/stacked-zoud/ (the version is 
 | 1 | Title screen | Blocks fall in the hero | Every "pay in 4" lands on a payday you have not lived yet. | `?seed=7&lang=en` fresh tab | 7 | core |
 | 2 | Season, greedy player | `?autoplay=alwaysSplit&pace=1500`: offers split one after another, blocks drop onto P2 to P5 | Split whenever you can: only a quarter leaves today. | `?seed=7&lang=en&autoplay=alwaysSplit&pace=1500` | 14 | core |
 | 3 | Same run | Columns pass the dashed money line, a percentage turns red | The other three quarters stack on your next paydays. | continues | 12 | core |
-| 4 | Same run, payday | A missed instalment: red stripes, shake, late fee line | A column taller than your money misses: late fee, red report, no new splits. | continues | 14 | core |
+| 4 | Same run, payday | A missed instalment: red stripes, shake, late fee line | Wallet empty on payday: a missed instalment, a late fee, a red report. | continues | 14 | core |
 | 5 | Same run, end | DECLINED stamp, summary | The bank reads the report. 86% of each payday was spent before it arrived. | continues to the end | 12 | core |
 | 6 | Same seed, planner | `?autoplay=planner&pace=1100`: pays now when the wallet allows, splits a need with room | Same season, read the columns first. | `?seed=7&lang=en&autoplay=planner&pace=1100` | 22 | core |
 | 7 | Same run, end | APPROVED stamp, summary | Approved: no late fees, needs met, more good days. | continues to the end | 10 | core |
