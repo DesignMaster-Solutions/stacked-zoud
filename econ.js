@@ -10,7 +10,7 @@ export const FEE_CAP = 0.30; // UAE rule: all fees on one plan, late fees includ
 export const LIMIT = 7000; // the game's BNPL app lets you owe at most this much across open plans
 export const MAKE_DO = 0.4; // skipping a need costs 40% of its price next payday (taxis instead of the car, eating out with no fridge)
 export const NEED_PAIN = 4; // good days lost when a need is skipped (no car for a month is a bad month)
-export const OFFER_SECONDS = 9; // the offer timer; calm mode turns it off
+export const OFFER_SECONDS = 12; // the sale clock; calm mode turns it off
 
 // Wants: price in AED and the good days they bring. Needs: they come back as a cost if skipped.
 export const WANTS = [
@@ -23,6 +23,9 @@ export const NEEDS = [
   { id: 'car', aed: 1600, win: [2, 3] }, { id: 'fridge', aed: 1900, win: [4, 5] }, { id: 'school', aed: 2400, win: [6, 7] },
 ];
 export const BANKS = ['car', 'lease']; // who reads the report at the end: a car loan or the lease renewal
+
+// Sales have a clock, bills do not: a need is never lost by reading it. Month 1 has none, so a new player can learn the columns.
+export const hasClock = (s, o) => s.m > 1 && !o.need;
 
 export function rng(seed) { // mulberry32: same seed, same season
   let a = seed >>> 0;

@@ -1,8 +1,8 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=13';
-import * as A from './a11y.js?v=13';
-import * as I from './i18n.js?v=13';
-import * as Art from './art.js?v=13';
+import * as E from './econ.js?v=14';
+import * as A from './a11y.js?v=14';
+import * as I from './i18n.js?v=14';
+import * as Art from './art.js?v=14';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -15,12 +15,14 @@ const auto = params.has('autoplay') ? (E.STRATEGIES[params.get('autoplay')] ? pa
 const fast = params.has('fast');
 
 let run, phase, idx = 0, pd = null, dropped = null, paused = false, timer = null, left = 0, timedOut = null;
+let armedAt = 0; // taps before this are ignored: a tap meant for the card that just left must not act on the one that replaced it
 const T = (k, v) => A.plain(I.t(k, lang, v), S, lang);
 const money = x => I.aed(x, lang);
 const signed = (sign, x) => `<bdi dir="ltr">${sign}${money(x)}</bdi>`; // keeps the sign next to the number in Arabic
 const item = id => T('i_' + id);
 const moving = () => !S.calm && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 const offer = () => run.offers[run.m][idx];
+const clocked = () => !S.calm && !auto && E.hasClock(run, offer());
 
 // ---------- sound: tiny WebAudio blips, nothing downloaded ----------
 let ac;
@@ -61,7 +63,7 @@ function board() {
     for (const p of run.plans) for (const d of p.due) if (d.m === m && !d.paid) blocks.push({ id: p.id, aed: d.aed, red: p.red, fresh: dropped === p });
     const total = blocks.reduce((a, b) => a + b.aed, 0);
     const over = total > E.FREE;
-    const html = blocks.map((b, i) => `<i class="blk${b.red ? ' late' : ''}${b.fresh && moving() ? ' drop' : ''}" style="--h:${Math.max(10, b.aed * SCALE)}px;--hue:${hue(b.id)};--d:${k * 90 + i * 20}ms" title="${item(b.id)} ${money(b.aed)}">${b.aed * SCALE >= 24 ? Art.icon(b.id) : ""}<span>${money(b.aed)}</span></i>`).join('')
+    const html = blocks.map((b, i) => `<i class="blk${b.red ? ' late' : ''}${b.fresh && moving() ? ' drop' : ''}" style="--h:${Math.max(10, b.aed * SCALE)}px;--hue:${hue(b.id)};--d:${k * 90 + i * 20}ms" title="${item(b.id)} ${money(b.aed)}">${b.aed * SCALE >= 24 ? Art.icon(b.id) : ""}${b.aed * SCALE >= 14 ? `<span>${money(b.aed)}</span>` : ''}</i>`).join('')
       + (ghost && k <= 3 ? `<i class="blk ghost" style="--h:${ghost * SCALE}px;--hue:${hue(o.id)}"><span>${signed('+', ghost)}</span></i>` : '');
     const pct = Math.round(100 * total / E.FREE);
     return `<div class="col${over ? ' over' : ''}" data-m="${m}"><div class="stack">${html}<b class="line" style="bottom:${E.FREE * SCALE}px"></b></div>
@@ -95,18 +97,19 @@ function offerCard() {
   const o = offer();
   const q = E.quarter(o.aed);
   const why = a => { const b = E.blocked(run, o, a); return b ? T('why_' + b) : ''; };
-  const timed = !S.calm && !auto;
+  const note = S.calm || auto ? '' : run.m === 1 ? T('firstMonth') : o.need ? T('billNoClock') : '';
+  const broke = run.m > 1 && pd && E.blocked(run, o, 'now') === 'noCash' && E.blocked(run, o, 'split') === 'noCash' && pd.paid.length;
   return `<section class="offer${o.need ? ' need' : ''}" style="--hue:${hue(o.id)}" data-id="${o.id}">
     ${timedOut ? `<p class="small why">${T('timedOut', { item: item(timedOut) })}</p>` : ''}<div class="tag">${o.need ? T('need') : T('want')} · ${T('offerOf', { i: idx + 1 })}</div>
     <div class="name">${Art.icon(o.id, "ic big")}${item(o.id)}</div><div class="price">${money(o.aed)}</div>
     ${o.need ? `<p class="small">${T('skipNeed', { x: money(Math.round(o.aed * E.MAKE_DO)) })}</p>` : ''}
-    ${timed ? `<div class="clock"><i style="width:100%"></i></div>` : ''}
+    ${clocked() ? `<div class="clock"><i style="width:100%"></i></div>` : note ? `<p class="small muted">${note}</p>` : ''}
     <div class="actions">
       <button class="primary" data-act="now" ${why('now') ? 'disabled' : ''} title="${why('now')}">${T('payNow', { x: money(o.aed) })}</button>
       <button class="primary alt" data-act="split" ${why('split') ? 'disabled' : ''} title="${why('split')}">${T('split', { x: money(q) })}</button>
       <button class="link" data-act="skip">${T('skip')}</button>
     </div>
-    <p class="small why">${[...new Set([why('now'), why('split')].filter(Boolean))].join(' · ')}</p></section>`;
+    <p class="small why">${broke ? T('pastYou', { x: money(pd.paid.reduce((a, p) => a + p.aed, 0)) }) : [...new Set([why('now'), why('split')].filter(Boolean))].join(' · ')}</p></section>`;
 }
 
 function paydayCard() {
@@ -149,6 +152,7 @@ function play() {
   if (phase === 'end') return endScreen();
   app.innerHTML = `${hud()}<div class="layout"><div class="main">${board()}${phase === 'offer' ? offerCard() : paydayCard()}</div>${report()}</div>`;
   dropped = null;
+  armedAt = auto ? 0 : performance.now() + 400;
   if (phase === 'offer') startTimer();
   if (phase === 'payday') paydayJuice();
   const pace = fast ? 120 : Number(params.get('pace')) || 900;
@@ -165,7 +169,7 @@ function paydayJuice() {
 }
 
 function startTimer() {
-  if (S.calm || auto || paused) return;
+  if (!clocked() || paused) return;
   left = E.OFFER_SECONDS * 10;
   timer = setInterval(() => {
     if (paused) return;
@@ -227,6 +231,7 @@ app.addEventListener('click', e => {
   if (b.dataset.a11y) { settingsOpen = true; S = A.toggle(S, b.dataset.a11y); save(A.STORAGE_KEY, JSON.stringify(S)); applySettings(); return title(); }
   if (b.dataset.lang) { lang = b.dataset.lang; save(I.STORAGE_KEY, lang); applySettings(); return title(); }
   const a = b.dataset.act;
+  if (['now', 'split', 'skip', 'cont'].includes(a) && performance.now() < armedAt) return;
   if (a === 'start') start(Number(params.get('seed')) || Math.floor(Math.random() * 1e9));
   if (['now', 'split', 'skip'].includes(a)) act(a);
   if (a === 'cont') { timedOut = null; phase = 'offer'; play(); }

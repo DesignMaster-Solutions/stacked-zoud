@@ -32,6 +32,25 @@ browse $D wait --text "STACKED" 20 >/dev/null
 browse $D open "${U}?seed=7&lang=ar&v=$RANDOM" >/dev/null
 browse $D wait --text "ابدأ الموسم" 20 >/dev/null || fail "arabic title"
 [[ $(browse $D js 'return document.documentElement.dir') == rtl ]] || fail "rtl"
+# Sales have a clock from month 2, bills never. A tap racing the card change must not act on the next offer (seed 12: month 2 = phone, car repair, sofa).
+browse $D open "${U}?seed=12&lang=en&v=$RANDOM" >/dev/null
+browse $D wait --text "STACKED" 20 >/dev/null
+browse $D click --text "Start the season" >/dev/null
+browse $D wait --text "Month 1 of 8" 10 >/dev/null || fail "month 1 (clock block)"
+[[ $(browse $D js 'return document.querySelectorAll(".clock").length') == 0 ]] || fail "month 1 has a clock"
+browse $D js 'const b = () => document.querySelector("[data-act=skip]"); b().click(); b().click(); return 1' >/dev/null
+[[ $(browse $D text .tag) == *"Offer 2 of 3"* ]] || fail "a double tap took two offers: $(browse $D text .tag)"
+sleep 0.5; browse $D click '[data-act=skip]' >/dev/null
+sleep 0.5; browse $D click '[data-act=skip]' >/dev/null
+browse $D wait --text "Payday 2" 10 >/dev/null || fail "payday 2 (clock block)"
+sleep 0.5; browse $D click --text "Back to the sales" >/dev/null
+browse $D wait --text "Month 2 of 8" 10 >/dev/null || fail "month 2 (clock block)"
+[[ $(browse $D js 'return document.querySelectorAll(".clock").length') == 1 ]] || fail "a sale in month 2 has no clock"
+browse $D js 'new MutationObserver((l, o) => { if (document.querySelector(".offer .why")?.textContent.includes("Time ran out")) { o.disconnect(); document.querySelector("[data-act=skip]").click(); } }).observe(document.getElementById("app"), { childList: true }); return 1' >/dev/null
+browse $D wait --text "Time ran out" 20 >/dev/null || fail "the sale clock did not run out"
+[[ $(browse $D text .tag) == *"Offer 2 of 3"* ]] || fail "a late tap acted on the next offer: $(browse $D text .tag)"
+[[ $(browse $D js 'return document.querySelectorAll(".offer.need").length') == 1 ]] || fail "offer 2 of month 2 should be the car repair"
+[[ $(browse $D js 'return document.querySelectorAll(".clock").length') == 0 ]] || fail "a bill has a clock"
 for st in planner alwaysSplit; do
   browse $D open "${U}?seed=7&lang=en&autoplay=$st&fast&a11y=calm&v=$RANDOM" >/dev/null
   browse $D wait --text "the bank reads your credit report" 90 >/dev/null || fail "autoplay $st did not end: $(browse $D text | head -5)"

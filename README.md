@@ -12,7 +12,7 @@ need (a car repair, school fees, a fridge that died). Each offer has three butto
 
 Splitting feels free: only a quarter leaves today. The other three quarters drop as blocks into the next paydays,
 which sit on screen as columns. Each column is one month of money left after rent, transport and what you send home.
-The player watches the future fill up. When a payday arrives and its column is taller than the money, an instalment
+The player watches the future fill up. A column past the money line eats the savings; when the wallet runs out, an instalment
 is missed: a late fee lands, the plan goes red on your credit report panel, and the next surprise has nowhere to fit.
 
 The run ends when a bank looks at your report (car loan or lease renewal) and decides. The summary shows how much of
@@ -30,7 +30,7 @@ closest with one line ("0%" buy-now-pay-later "quietly takes a slice of every fu
 
 | Criterion | How Stacked earns it |
 |---|---|
-| Prototype & Gameplay (25) | One screen, one thumb, 6 to 8 minute run. Falling 4-block pieces, visible future, offer timers, collapse feedback, a clear goal (reach the bank with a clean report and savings). |
+| Prototype & Gameplay (25) | One screen, one thumb, 6 to 8 minute run. Falling 4-block pieces, visible future, a clock on sales (never on bills), collapse feedback, a clear goal (reach the bank with a clean report and savings). |
 | Financial Literacy Integration (25) | BNPL is credit; instalments compete with future income; missed instalments cost fees and show on the report; needs vs wants; share of next month already committed. |
 | Educational Impact (15) | End-of-run report in plain words, plus the 3 or 4 questions to ask before splitting (sourced, not invented). |
 | Creativity & Innovation (15) | The future as a physical stack you can see before you live it. |

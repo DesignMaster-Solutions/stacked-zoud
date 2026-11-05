@@ -111,3 +111,10 @@ test('catch up: paying the late instalment now clears the pause, but the report 
   assert.equal(E.blocked(s, offer(100), 'split'), 'noCash');
   assert.equal(s.missed, 1, 'the bank still sees the missed instalment');
 });
+test('sales have a clock from month 2; bills never do, so a need cannot be lost by reading it', () => {
+  const want = { id: 'tv', need: false, aed: 2400 }, need = { id: 'fridge', need: true, aed: 1900 };
+  assert.equal(E.hasClock({ m: 1 }, want), false);
+  assert.equal(E.hasClock({ m: 2 }, want), true);
+  assert.equal(E.hasClock({ m: 2 }, need), false);
+  assert.ok(E.OFFER_SECONDS >= 12, 'time to read the offer and three columns');
+});
