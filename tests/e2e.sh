@@ -51,6 +51,12 @@ browse $D wait --text "Time ran out" 20 >/dev/null || fail "the sale clock did n
 [[ $(browse $D text .tag) == *"Offer 2 of 3"* ]] || fail "a late tap acted on the next offer: $(browse $D text .tag)"
 [[ $(browse $D js 'return document.querySelectorAll(".offer.need").length') == 1 ]] || fail "offer 2 of month 2 should be the car repair"
 [[ $(browse $D js 'return document.querySelectorAll(".clock").length') == 0 ]] || fail "a bill has a clock"
+# A small split's label fits its dashed block, in Large text too (seed 1: the first offer is a dinner).
+browse $D open "${U}?seed=1&lang=en&a11y=large&v=$RANDOM" >/dev/null
+browse $D wait --text "STACKED" 20 >/dev/null
+browse $D click --text "Start the season" >/dev/null
+browse $D wait --text "Month 1 of 8" 10 >/dev/null || fail "month 1 (small split)"
+[[ $(browse $D js 'return [...document.querySelectorAll(".blk.ghost")].every(g => g.scrollHeight <= g.clientHeight) ? 1 : 0') == 1 ]] || fail "the label of a small split is clipped"
 for st in planner alwaysSplit; do
   browse $D open "${U}?seed=7&lang=en&autoplay=$st&fast&a11y=calm&v=$RANDOM" >/dev/null
   browse $D wait --text "the bank reads your credit report" 90 >/dev/null || fail "autoplay $st did not end: $(browse $D text | head -5)"
