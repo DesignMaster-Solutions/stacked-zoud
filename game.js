@@ -1,8 +1,8 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=8';
-import * as A from './a11y.js?v=8';
-import * as I from './i18n.js?v=8';
-import * as Art from './art.js?v=8';
+import * as E from './econ.js?v=9';
+import * as A from './a11y.js?v=9';
+import * as I from './i18n.js?v=9';
+import * as Art from './art.js?v=9';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -144,7 +144,7 @@ function play() {
   dropped = null;
   if (phase === 'offer') startTimer();
   if (phase === 'payday') paydayJuice();
-  if (auto) setTimeout(autoStep, fast ? 120 : 900);
+  if (auto) setTimeout(autoStep, fast ? 120 : Number(params.get('pace')) || 900);
 }
 
 // Payday reads out line by line: a coin per instalment paid, a crash and a shake for each one missed.
