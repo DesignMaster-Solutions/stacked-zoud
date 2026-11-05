@@ -83,13 +83,13 @@
   .blk .ic{display:block;margin:3px auto 0;width:16px;height:16px;color:var(--ink)}
   .blk.late .ic{color:#fff}
   .ledger .in{animation:rise .3s ease-out both}
-  @keyframes rise{from{opacity:0;transform:translateY(8px)}}
+  @keyframes rise{from{transform:translateY(8px);color:var(--gold)}}
   .clock.low{animation:pulse .5s ease-in-out infinite alternate}
   @keyframes pulse{to{transform:scaleY(1.6)}}
   .offer{animation:tag .35s cubic-bezier(.2,.9,.3,1) both}
-  @keyframes tag{from{opacity:0;transform:translateX(24px) rotate(1.5deg)}}
+  @keyframes tag{from{transform:translateX(24px) rotate(1.5deg)}}
   [dir=rtl] .offer{animation-name:tagr}
-  @keyframes tagr{from{opacity:0;transform:translateX(-24px) rotate(-1.5deg)}}
+  @keyframes tagr{from{transform:translateX(-24px) rotate(-1.5deg)}}
   .report li span{margin-inline-start:auto;color:var(--teal);white-space:nowrap}
   .report li.late span{color:var(--red);font-weight:700} .report li.closed span{color:var(--muted)}
   .end{max-width:640px;margin:0 auto}
@@ -112,6 +112,6 @@
 <body>
 <main id="app" aria-live="polite"></main>
 <noscript>Stacked needs JavaScript.</noscript>
-<script type="module" src="game.js?v=10"></script>
+<script type="module" src="game.js?v=11"></script>
 </body>
 </html>
