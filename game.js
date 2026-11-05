@@ -1,8 +1,8 @@
 // Stacked: the screens. The money lives in econ.js, the words in i18n.js, the settings in a11y.js.
-import * as E from './econ.js?v=6';
-import * as A from './a11y.js?v=6';
-import * as I from './i18n.js?v=6';
-import * as Art from './art.js?v=6';
+import * as E from './econ.js?v=7';
+import * as A from './a11y.js?v=7';
+import * as I from './i18n.js?v=7';
+import * as Art from './art.js?v=7';
 
 const params = new URLSearchParams(location.search);
 function load(k) { try { return localStorage.getItem(k); } catch { return null; } }
@@ -17,6 +17,7 @@ const fast = params.has('fast');
 let run, phase, idx = 0, pd = null, dropped = null, paused = false, timer = null, left = 0;
 const T = (k, v) => A.plain(I.t(k, lang, v), S, lang);
 const money = x => I.aed(x, lang);
+const signed = (sign, x) => `<bdi dir="ltr">${sign}${money(x)}</bdi>`; // keeps the sign next to the number in Arabic
 const item = id => T('i_' + id);
 const moving = () => !S.calm && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 const offer = () => run.offers[run.m][idx];
@@ -61,7 +62,7 @@ function board() {
     const total = blocks.reduce((a, b) => a + b.aed, 0);
     const over = total > E.FREE;
     const html = blocks.map((b, i) => `<i class="blk${b.red ? ' late' : ''}${b.fresh && moving() ? ' drop' : ''}" style="--h:${Math.max(10, b.aed * SCALE)}px;--hue:${hue(b.id)};--d:${k * 90 + i * 20}ms" title="${item(b.id)} ${money(b.aed)}">${b.aed * SCALE >= 24 ? Art.icon(b.id) : ""}<span>${money(b.aed)}</span></i>`).join('')
-      + (ghost && k <= 3 ? `<i class="blk ghost" style="--h:${ghost * SCALE}px;--hue:${hue(o.id)}"><span>+${money(ghost)}</span></i>` : '');
+      + (ghost && k <= 3 ? `<i class="blk ghost" style="--h:${ghost * SCALE}px;--hue:${hue(o.id)}"><span>${signed('+', ghost)}</span></i>` : '');
     const pct = Math.round(100 * total / E.FREE);
     return `<div class="col${over ? ' over' : ''}" data-m="${m}"><div class="stack">${html}<b class="line" style="bottom:${E.FREE * SCALE}px"></b></div>
       <div class="foot"><b>${m <= E.MONTHS ? T('pay', { n: m }) : T('pay', { n: m }) + '*'}</b><span>${pct}%</span></div></div>`;
@@ -107,9 +108,9 @@ function offerCard() {
 }
 
 function paydayCard() {
-  const lines = [`<div><span>${T('income')}</span><span class="plus">+${money(E.FREE)}</span></div>`]
-    .concat(pd.makeDo ? [`<div><span>${T('makeDo')}</span><span class="minus">-${money(pd.makeDo)}</span></div>`] : [])
-    .concat(pd.paid.map(p => `<div class="ok"><span>${T('paidInst', { item: item(p.id) })}</span><span>-${money(p.aed)}</span></div>`))
+  const lines = [`<div><span>${T('income')}</span><span class="plus">${signed('+', E.FREE)}</span></div>`]
+    .concat(pd.makeDo ? [`<div><span>${T('makeDo')}</span><span class="minus">${signed('-', pd.makeDo)}</span></div>`] : [])
+    .concat(pd.paid.map(p => `<div class="ok"><span>${T('paidInst', { item: item(p.id) })}</span><span>${signed('-', p.aed)}</span></div>`))
     .concat(pd.missed.map(p => `<div class="bad"><span>${T('missedInst', { item: item(p.id), fee: money(p.fee) })}</span><span>${money(p.aed)}</span></div>`));
   return `<section class="payday${pd.missed.length ? ' crash' : ''}"><h2>${T('paydayTitle', { n: run.m })}</h2>
     <div class="ledger">${lines.join('')}</div><p class="verdict">${pd.missed.length ? T('collapse') : T('clean')}</p>
