@@ -14,7 +14,7 @@
   *{box-sizing:border-box}
   html{font-size:var(--fs)}
   body{margin:0;min-height:100vh;background:var(--night);color:var(--sand);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic","Geeza Pro",sans-serif;line-height:1.45}
-  body.large{--fs:21px}
+  :root:has(body.large){--fs:21px} /* rem follows html, so the size is set on the root */
   /* avoid-ai-design-ignore-file: SD2. Pure black is the high-contrast accessibility mode, chosen on purpose */
   body.contrast{--night:#000;--card:#000;--sand:#fff;--muted:#fff;--teal:#5ff2e0;--gold:#ffd23f}
   #app{max-width:1180px;margin:0 auto;padding:12px 14px 40px;overflow-x:hidden}
@@ -112,6 +112,6 @@
 <body>
 <main id="app" aria-live="polite"></main>
 <noscript>Stacked needs JavaScript.</noscript>
-<script type="module" src="game.js?v=11"></script>
+<script type="module" src="game.js?v=12"></script>
 </body>
 </html>

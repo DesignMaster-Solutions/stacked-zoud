@@ -22,6 +22,9 @@ browse $D wait --text "Payday 2" 10 >/dev/null || fail "payday"
 [[ $(browse $D text .payday) == *"instalment paid"* ]] || fail "first instalment not paid on payday 2"
 W=$(browse $D js 'return document.documentElement.scrollWidth - innerWidth')
 [[ $W -le 0 ]] || fail "page wider than the screen by ${W}px"
+browse $D open "${U}?seed=7&lang=en&a11y=large&v=$RANDOM" >/dev/null
+browse $D wait --text "STACKED" 20 >/dev/null
+[[ $(browse $D js 'return getComputedStyle(document.documentElement).fontSize') == 21px ]] || fail "Large text does not enlarge the page"
 browse $D open "${U}?seed=7&lang=ar&v=$RANDOM" >/dev/null
 browse $D wait --text "ابدأ الموسم" 20 >/dev/null || fail "arabic title"
 [[ $(browse $D js 'return document.documentElement.dir') == rtl ]] || fail "rtl"
