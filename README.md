@@ -38,6 +38,12 @@ plan is small, the stack is not. (Keyword scan of the 30 itch pages; re-check be
 | Localization bonus UAE (5) | AED, English + Arabic (RTL), UAE sale seasons and the UAE rules on BNPL and credit reports. |
 | Inclusivity & Accessibility bonus (5) | Same package as Snowball: large text, high contrast, calm speed (no timers), simple words, sound off, pause. |
 
+## For the jury
+
+- Concept document (official 6-section template): [docs/CONCEPT.pdf](https://designmaster-solutions.github.io/stacked-zoud/docs/CONCEPT.pdf)
+- Budget: [docs/BUDGET.pdf](https://designmaster-solutions.github.io/stacked-zoud/docs/BUDGET.pdf)
+- itch.io page: https://designmastersolutions.itch.io/stacked
+
 ## Facts and sources
 
 Every fact on screen, checked at the primary source on 4 November 2026 (quotes and article numbers in
